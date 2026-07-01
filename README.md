@@ -1,5 +1,10 @@
 # skill-bridge-hq
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![agentskills.io](https://img.shields.io/badge/agentskills.io-v1-blue)](https://agentskills.io/specification)
+[![Skill](https://img.shields.io/badge/skill-discovery-purple)](skills/skill-discovery/SKILL.md)
+[![GitHub last commit](https://img.shields.io/github/last-commit/CodeSigils/skill-bridge-hq)](https://github.com/CodeSigils/skill-bridge-hq)
+
 **A portable discovery methodology for agent skills.** This repo teaches
 any agentskills.io-compatible agent how to find the best skill for a task
 -- scanning catalogs, marketplaces, and GitHub; evaluating candidates; and
@@ -135,6 +140,8 @@ for clients that auto-scan that path. If your agent reads
 ```
 skill-bridge-hq/
 ├── README.md                               # you are here
+├── AGENTS.md                               # agent context for repo visitors
+├── SECURITY.md                             # vulnerability reporting
 ├── LICENSE                                 # MIT
 ├── .gitignore
 ├── skills/
@@ -145,10 +152,10 @@ skill-bridge-hq/
 │       └── skill-discovery -> ../../skills/skill-discovery/  # symlink
 └── .github/
     ├── workflows/ci.yml                    # checkout → Hermes-refs check
-    └── scripts/ci-check.py                 # single rg call
+    └── scripts/ci-check.py                 # single grep call
 ```
 
-**7 files.** One skill. One CI check. Zero platform adapter files.
+**9 files.** One skill. One CI check. Zero platform adapter files.
 
 ---
 
