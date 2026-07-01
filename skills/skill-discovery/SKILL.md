@@ -438,8 +438,8 @@ This methodology was built from live research on 2026-07-01:
 - **Hub catalog scan:** 2,460 indexed skills across 7 sources
 - **agentskills.io client count:** 42 confirmed via home page carousel
 - **External marketplaces:** 6 reachable, 1 Showcase page (resolved 404→200 same day)
-- **HQ hub-explorer skill:** Source for the search/evaluate/recommend
-  pipeline (stripped of Hermes-specific references)
+- **`hub-explorer` skill (archived):** Source for the search/evaluate/recommend
+  pipeline (Hermes-specific references removed for portability)
 
 This methodology is designed to be self-verifying — it teaches you
 how to check source freshness at runtime rather than relying on

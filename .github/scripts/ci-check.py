@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check for Hermes-specific references in portable skills.
 
-This is the only CI check the bridge repo needs. It catches the one thing no
+This is the only CI check this repo needs. It catches the one thing no
 agent runtime validates: cross-agent portability. A stray `skill_view()` call
 makes the methodology useless on non-Hermes agents.
 

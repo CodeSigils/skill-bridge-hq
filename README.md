@@ -143,9 +143,11 @@ skill-discovery/
 ├── SECURITY.md                             # vulnerability reporting
 ├── LICENSE                                 # MIT
 ├── .gitignore
+├── docs/
+│   └── 2026-07-01-hub-marketplace-research.md  # evidence base
 ├── skills/
 │   └── skill-discovery/
-│       └── SKILL.md                        # the methodology (~450 lines)
+│       └── SKILL.md                        # the methodology (~460 lines)
 ├── .agents/
 │   └── skills/
 │       └── skill-discovery -> ../../skills/skill-discovery/  # symlink
@@ -154,7 +156,7 @@ skill-discovery/
     └── scripts/ci-check.py                 # single grep call
 ```
 
-**8 files.** One skill. One CI check. Zero platform adapter files.
+**9 files.** One skill. One CI check. Zero platform adapter files.
 
 ---
 
@@ -199,8 +201,7 @@ This methodology was informed by live research on 2026-07-01:
 - **agentskills.io Client Showcase: returned 404 at ~02:00 UTC, 200 by ~06:24 UTC same day** -- drift confirmed within hours
 - **Hub index: 5 weeks stale** -- freshness check essential
 
-Full research evidence: `plan/2026-07-01-hub-marketplace-research.md`
-(removed before publishing)
+Full research evidence: `docs/2026-07-01-hub-marketplace-research.md`
 
 ---
 
