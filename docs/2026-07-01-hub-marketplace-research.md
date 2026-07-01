@@ -275,12 +275,14 @@ scan the ecosystem and find the right skill for a task.
 ```
 skill-discovery/
 ├── README.md              # "This is a discovery methodology for finding skills"
-├── LICENSE
-├── .gitignore
+├── docs/
+│   └── 2026-07-01-hub-marketplace-research.md  # Evidence base (this file)
 ├── skills/
 │   └── skill-discovery/   # The core product: portable discovery methodology
 │       └── SKILL.md       # Fallback chain, search methods, evaluation rubric
-└── plan/                  # Research artifacts, delete before publishing
+└── .github/
+    ├── workflows/ci.yml   # checkout → Hermes-refs check
+    └── scripts/ci-check.py # single grep call
 ```
 
 ### 4.4 What The Bridge Should NOT Do
@@ -376,4 +378,4 @@ This changes:
 |-------------|-----------|
 | `2026-06-29-ecosystem-research-note.md` | Evidence across 6 repos, file-swamp §3 patterns |
 | `2026-06-30-skill-bridge-extraction-plan.md` | Original extraction plan (needs reframing per §7.3) |
-| `../plan/README.md` | Recommendation to delete plan/ before publishing |
+| `../plan/README.md` | Recommendation to delete plan/ before publishing — **done.** plan/ deleted 2026-07-01. Research evidence archived in `docs/`. |
