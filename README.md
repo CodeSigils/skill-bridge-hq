@@ -193,15 +193,22 @@ URLs that drift.
 
 ## Evidence Base
 
-This methodology was informed by live research on 2026-07-01:
+This methodology was formed from live research on 2026-07-01. Key findings:
 
 - **2,460 skills** indexed in the Hermes hub from 7 sources
 - **42 clients** confirmed on agentskills.io (home page carousel)
 - **6 external marketplaces** verified reachable
-- **agentskills.io Client Showcase: returned 404 at ~02:00 UTC, 200 by ~06:24 UTC same day** -- drift confirmed within hours
+- **agentskills.io Client Showcase: 404 at ~02:00 UTC, recovered to 200 by ~06:24 UTC, reverted to 404 later same day** -- drift confirmed within hours
 - **Hub index: 5 weeks stale** -- freshness check essential
+- **Concentration risk:** 83.2% of the index comes from 3 sources (skills.sh, lobehub, browse-sh)
+- **Open questions:** 5 documented unknowns (refresh cadence, CLI force-refresh, optional-feature support, top-20 repo patterns, total deduplicated count)
 
-Full research evidence: `docs/2026-07-01-hub-marketplace-research.md`
+The full research snapshot lives in [`docs/2026-07-01-hub-marketplace-research.md`](docs/2026-07-01-hub-marketplace-research.md)
+and includes a **Drift Register** tracking which claims have been re-verified since publication.
+
+> `docs/` is a repo-only artifact -- it provides provenance and audit trail but does
+> not ship with any skill installation. The shipped methodology (`skills/skill-discovery/SKILL.md`)
+> is self-contained and agent-agnostic.
 
 ---
 
