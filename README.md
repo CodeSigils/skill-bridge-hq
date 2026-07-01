@@ -140,7 +140,6 @@ for clients that auto-scan that path. If your agent reads
 ```
 skill-bridge-hq/
 ├── README.md                               # you are here
-├── AGENTS.md                               # agent context for repo visitors
 ├── SECURITY.md                             # vulnerability reporting
 ├── LICENSE                                 # MIT
 ├── .gitignore
@@ -155,7 +154,7 @@ skill-bridge-hq/
     └── scripts/ci-check.py                 # single grep call
 ```
 
-**9 files.** One skill. One CI check. Zero platform adapter files.
+**8 files.** One skill. One CI check. Zero platform adapter files.
 
 ---
 
