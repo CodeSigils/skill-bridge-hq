@@ -2,7 +2,7 @@
 """Validate docs/ frontmatter: required fields, expiry check, basic integrity.
 
 Checks:
-  - Required frontmatter fields present (status, date, updated, purpose)
+  - Required frontmatter fields present (status, date, purpose)
   - expires field exists (or warn if missing)
   - YAML parses correctly
   - No unlabelled code fences (maintainability)

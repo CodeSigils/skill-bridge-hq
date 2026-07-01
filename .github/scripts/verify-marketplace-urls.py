@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Re-verify marketplace URLs listed in docs/ and report drift.
+"""The URL list is defined inline in this script (mirrors the External
+Marketplaces table in docs/). If the doc adds or removes URLs, update
+the URLS dict here to match.
 
 Usage:
   python .github/scripts/verify-marketplace-urls.py
@@ -10,12 +12,9 @@ Exit code 0 = all stable, 1 = any URL drifted since last doc update.
 
 import subprocess
 import sys
-import os
 
-DOC_PATH = os.path.join(os.path.dirname(__file__), "..", "..",
-                        "docs", "2026-07-01-hub-marketplace-research.md")
-
-# URLs to check — mirrors the External Marketplaces table in the doc
+# URLs to check — mirrors the External Marketplaces table in the doc.
+# Keep this dict in sync with docs/2026-07-01-hub-marketplace-research.md.
 URLS = {
     "skills.sh":               "https://skills.sh/",
     "agentskill.sh":           "https://agentskill.sh/",

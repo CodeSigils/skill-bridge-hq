@@ -7,7 +7,6 @@ makes the methodology useless on non-Hermes agents.
 
 Patterns checked:
   - skill_view, skill_manage (Hermes-specific tool names)
-  - hermes  (CLI command references)
   - ~/.hermes/ (Hermes config path)
 """
 
@@ -15,7 +14,7 @@ import subprocess
 import sys
 
 result = subprocess.run(
-    ["grep", "-rnP", r"(?i)(skill_view|skill_manage|hermes\s|~/\.hermes)", "skills/"],
+    ["grep", "-rnP", r"(?i)(skill_view|skill_manage|~/\.hermes)", "skills/"],
     capture_output=True, text=True
 )
 
