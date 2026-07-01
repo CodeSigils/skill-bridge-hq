@@ -29,8 +29,8 @@ match is found.
 ```
 
 Always start at stage 1 and proceed until a match is found that
-passes the Evaluation Rubric (SS4). Before any search, check
-catalog freshness (SS1.1).
+passes the Evaluation Rubric (§4). Before any search, check
+catalog freshness (§1.1).
 
 ---
 
@@ -209,21 +209,32 @@ known to index agent skills. **Verify reachability at query time**
 6. **Direct GitHub search** -- Search for `<tool> SKILL.md`,
    `<tool> agent skill`, or `<tool> agentskills.io`.
 
-### 2.2 GitHub Source Repos
+### 2.2 GitHub Source Search
 
-When marketplaces don't have what you need, check these known
-high-quality skill repositories directly:
+When marketplaces don't have what you need, search GitHub directly.
+Do not rely on hand-maintained repo lists or star counts — repository
+membership, popularity, and format details drift.
 
-| Repo | Stars | Skills | Format |
-|------|-------|--------|--------|
-| addyosmani/agent-skills | 68K+ | 24 | Flat SKILL.md, README discovery |
-| anthropics/claude-plugins-official | 31K+ | 37 plugins, 29+ SKILL.md | agentskills.io + extensions |
-| openai/skills | -- | ~20 | agentskills.io format |
-| wondelai/skills | 1.5K | 50 | agentskills.io, book-philosophy |
-| mukul975/Anthropic-Cybersecurity-Skills | 23K+ | 817 | index.json + reference dirs |
-| Agents365-ai/drawio-skill | 5K+ | 1 | Self-contained SKILL.md |
-| microsoft/azure-skills | Featured | -- | agentskills.io format |
-| vercel-labs/skills | Featured | -- | agentskills.io format |
+**Recommended searches:**
+
+```text
+"SKILL.md" "<domain>"
+"agentskills.io" "<domain>"
+"<agent-name>" "skill"
+site:github.com SKILL.md "<task keyword>"
+```
+
+Evaluate each discovered repo using §4:
+
+- Does it contain `SKILL.md` files or an agentskills.io-compatible format?
+- Is the source transparent and inspectable?
+- Does recent activity suggest the repo is maintained?
+- Does the skill match the user's task, or only the broad domain?
+- Are install/discovery instructions compatible with the current agent?
+
+Prefer official/vendor repos first, then transparent GitHub repos, then
+aggregators or marketplaces. Treat star counts as freshness hints only —
+verify the actual files before recommending a skill.
 
 ### 2.3 Ecosystem Directories
 
@@ -363,16 +374,17 @@ Expand search for: "github", "pull-request", "code-review", "git"
 
 ### Pattern 3: Stack-Based Discovery
 
-```
-Stack: Kubernetes + Python + PostgreSQL
-Search each: "kubernetes", "python", "database"
-- Intersect results for multi-stack skills
-- Find per-stack skills as fallback
-```
+For multi-stack tasks, use §1.5: search each stack component
+separately, then prefer skills that cover the intersection. If no
+multi-stack skill exists, recommend one skill per stack component.
 
 ---
 
-## Section 6: Common Search Examples
+## Section 6: Task-to-Search-Term Examples
+
+These are user-task keywords, not necessarily catalog tags. Use them
+to seed name/description searches when structured tags are absent or
+sparse.
 
 | Task keyword    | What to find                          |
 |-----------------|---------------------------------------|
@@ -399,10 +411,15 @@ Search each: "kubernetes", "python", "database"
 External sources drift. Before relying on a marketplace or source
 URL, verify it is reachable.
 
-**Method:** Use the agent's HTTP query capability (e.g. `curl -s -o
-/dev/null -w "%{http_code}" <url>`) to check each source before
-searching it. A 200 or 3xx response means the source is reachable.
-4xx or 5xx means skip or fall back.
+**Method:** Use the agent's native HTTP/query capability to check each
+source before searching it. If shell access is available, one example is:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" <url>
+```
+
+A 200 or 3xx response means the source is reachable. 4xx or 5xx means
+skip or fall back.
 
 **URLs to verify (best-effort, last checked 2026-07-01):**
 
@@ -415,10 +432,9 @@ searching it. A 200 or 3xx response means the source is reachable.
 | skilldock.io  | https://skilldock.io/          | 200    |
 | agentskills   | https://agentskills.io/        | 200    |
 
-**Note:** The agentskills.io Client Showcase page was 404 during initial
-research (2026-07-01 ~02:00 UTC) but returned to 200 later the same day.
-This confirms the methodology's own advice: **verify reachability at
-runtime** — even the research itself got caught by URL drift within hours.
+**Note:** External source status can change between sessions. Treat
+recorded HTTP statuses as examples only; verify every source at query
+time before relying on it.
 
 ### When All Sources Are Exhausted
 
