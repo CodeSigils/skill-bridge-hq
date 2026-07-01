@@ -1,9 +1,9 @@
-# skill-bridge-hq
+# skill-discovery
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![agentskills.io](https://img.shields.io/badge/agentskills.io-v1-blue)](https://agentskills.io/specification)
 [![Skill](https://img.shields.io/badge/skill-discovery-purple)](skills/skill-discovery/SKILL.md)
-[![GitHub last commit](https://img.shields.io/github/last-commit/CodeSigils/skill-bridge-hq)](https://github.com/CodeSigils/skill-bridge-hq)
+[![GitHub last commit](https://img.shields.io/github/last-commit/CodeSigils/skill-discovery)](https://github.com/CodeSigils/skill-discovery)
 
 **A portable discovery methodology for agent skills.** This repo teaches
 any agentskills.io-compatible agent how to find the best skill for a task
@@ -21,7 +21,7 @@ recommending the best match.
 Clone this repo and tell your agent to load `skill-discovery`:
 
 ```bash
-git clone --filter=blob:none https://github.com/CodeSigils/skill-bridge-hq
+git clone --filter=blob:none https://github.com/CodeSigils/skill-discovery
 ```
 
 Then make the skill discoverable. Choose your platform:
@@ -35,7 +35,7 @@ Then make the skill discoverable. Choose your platform:
 ```yaml
 skills:
   external_dirs:
-    - /path/to/skill-bridge-hq/skills/skill-discovery
+    - /path/to/skill-discovery/skills/skill-discovery
 ```
 
 This makes skill changes visible without reinstalling and survives
@@ -44,7 +44,7 @@ Hermes upgrades.
 **Alternative:** Copy the skill directly:
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery ~/.hermes/skills/
+cp -r skill-discovery/skills/skill-discovery ~/.hermes/skills/
 ```
 </details>
 
@@ -52,7 +52,7 @@ cp -r skill-bridge-hq/skills/skill-discovery ~/.hermes/skills/
 <summary><b>Claude Code (Anthropic)</b></summary>
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery .claude/skills/
+cp -r skill-discovery/skills/skill-discovery .claude/skills/
 ```
 
 Claude Code discovers skills by scanning `.claude/skills/` for
@@ -63,7 +63,7 @@ Claude Code discovers skills by scanning `.claude/skills/` for
 <summary><b>Codex CLI (OpenAI)</b></summary>
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery .codex/skills/
+cp -r skill-discovery/skills/skill-discovery .codex/skills/
 ```
 
 Codex CLI discovers skills in `.codex/skills/` via filesystem walk.
@@ -73,13 +73,13 @@ Codex CLI discovers skills in `.codex/skills/` via filesystem walk.
 <summary><b>OpenCode CLI</b></summary>
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery .opencode/skills/
+cp -r skill-discovery/skills/skill-discovery .opencode/skills/
 ```
 
 Or create a symlink (zero-maintenance pointer):
 
 ```bash
-ln -s /path/to/skill-bridge-hq/skills/skill-discovery .opencode/skills/
+ln -s /path/to/skill-discovery/skills/skill-discovery .opencode/skills/
 ```
 </details>
 
@@ -89,7 +89,7 @@ ln -s /path/to/skill-bridge-hq/skills/skill-discovery .opencode/skills/
 Cursor uses `.cursor/rules/` for skill-like content:
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery .cursor/rules/
+cp -r skill-discovery/skills/skill-discovery .cursor/rules/
 ```
 
 Note: Cursor applies rules as chat context, not via
@@ -111,7 +111,7 @@ but direct SKILL.md loading is not natively supported.
 <summary><b>Gemini CLI (Google)</b></summary>
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery .agents/skills/
+cp -r skill-discovery/skills/skill-discovery .agents/skills/
 ```
 
 Gemini CLI explicitly supports `.agents/skills/` as a cross-tool path.
@@ -125,7 +125,7 @@ clients that support the agentskills.io standard scan a `skills/`
 or `.agents/skills/` directory.
 
 ```bash
-cp -r skill-bridge-hq/skills/skill-discovery <your-skills-dir>/
+cp -r skill-discovery/skills/skill-discovery <your-skills-dir>/
 ```
 </details>
 
@@ -138,7 +138,7 @@ for clients that auto-scan that path. If your agent reads
 ## What This Repo Contains
 
 ```
-skill-bridge-hq/
+skill-discovery/
 ├── README.md                               # you are here
 ├── SECURITY.md                             # vulnerability reporting
 ├── LICENSE                                 # MIT
@@ -167,7 +167,7 @@ skill-bridge-hq/
 | Platform adapter files (`.claude/`, `.cursor/`, `.codex/` etc.) | User-side setup only. The repo ships only `skills/*/SKILL.md` and a single cross-tool symlink. |
 | index.json or plugin.json | No marketplace distribution. Filesystem discovery is sufficient at 1 skill. |
 | Hermes-specific references | Any `skill_view()` or `hermes` CLI reference would silently break on non-Hermes agents. CI catches this. |
-| Development artifacts (ADRs, review pipeline, architecture docs) | These stay in the source repo. The bridge ships only the shipping surface. |
+| Development artifacts (ADRs, review pipeline, architecture docs) | These stay in the source repo. This repo ships only the shipping surface. |
 
 ---
 
