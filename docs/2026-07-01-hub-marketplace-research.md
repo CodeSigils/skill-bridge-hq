@@ -2,6 +2,7 @@
 status: reference
 date: 2026-07-01
 updated: 2026-07-01
+expires: 2026-10-01
 purpose: >
   Reference map of the agent-skill ecosystem as of mid-2026 — hub indexes,
   external marketplaces, client platforms, ecosystem directories, and open
@@ -85,7 +86,7 @@ before depending on any of them.
 | SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. Claims 270K+ indexed SKILL.md files. |
 | ClawHub | https://clawhub.ai/ | 200 | OpenClaw skills/plugins marketplace | 200 entries in hub index. Source quality should be evaluated before use. |
 | skilldock.io | https://skilldock.io/ | 200 | Versioned skill registry | Publish/install workflow. V1 had 10+ repos / 20+ skills. V2 in development. |
-| agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | 21,302★ GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. |
+| agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | ~21.3K★ GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. Re-verified 404 on 2026-07-01 (later session). |
 
 #### 1.2.1 Discovered: agentskills.io Client Showcase Drift
 
@@ -94,8 +95,13 @@ page returned HTTP 404. By approximately 06:24 UTC the same day, it returned
 HTTP 200. The root cause is unknown — page moved, server flake, or routing
 issue. This was the research team's first encounter with ecosystem URL drift
 in real time: between two research sessions on the same day, a source URL
-changed behaviour and then self-recovered. It confirms the principle that
-external URLs must be verified at query time, not recorded once and trusted.
+changed behaviour and then self-recovered.
+
+**Update (same day, later session):** The page is 404 again. The earlier
+200 appears to have been a temporary recovery, not a permanent fix. As of
+this writing the page is persistently unavailable, reinforcing the conclusion
+that external URLs must be verified at query time, not recorded once and
+trusted.
 
 ---
 
@@ -146,7 +152,7 @@ an oversight, or a stale carousel is unknown.
 |-----------|-----|------------------|--------------------|
 | Hermes Atlas | hermesatlas.com | 178+ repos across 12 categories, weekly star velocity | GitHub stars, descriptions, categories — but not file trees, skill counts, or reference ratios |
 | agentskills.io repo | github.com/agentskills/agentskills | Specification, tools, reference implementation | README only |
-| awesome-copilot | github.com/github/awesome-copilot | Community-curated Copilot resources (35.9K★) | Links + categories — not programmatically parseable |
+| awesome-copilot | github.com/github/awesome-copilot | Community-curated Copilot resources (~36K★) | Links + categories — not programmatically parseable |
 | anthropics/claude-plugins-official | github.com/anthropics/claude-plugins-official | 37 plugins, 29+ SKILL.md files | Full repo tree (git-cloneable) |
 | openai/skills | github.com/openai/skills | Official Codex skill catalog | Full repo tree (git-cloneable) |
 
@@ -160,10 +166,10 @@ repos that appeared in hub index data and marketplace scans.
 
 | Repo | Stars | Skills | Format | Discovery mechanism |
 |------|-------|--------|--------|--------------------|
-| addyosmani/agent-skills | 68K | 24 | Flat SKILL.md, no YAML frontmatter | README-based browsing |
-| anthropics/claude-plugins-official | 31.3K | 37 plugins, 29+ SKILL.md | agentskills.io + extensions | `.claude-plugin/` directory |
+| addyosmani/agent-skills | ~68K | 24 | Flat SKILL.md, no YAML frontmatter | README-based browsing |
+| anthropics/claude-plugins-official | ~31K | 37 plugins, 29+ SKILL.md | agentskills.io + extensions | `.claude-plugin/` directory |
 | openai/skills | — | ~20 | agentskills.io | `$skill-installer` CLI |
-| wondelai/skills | 1.5K | 50 | agentskills.io (book-philosophy format) | Flat root directory |
+| wondelai/skills | ~1.5K | 50 | agentskills.io (book-philosophy format) | Flat root directory |
 | vercel-labs/skills | — | Featured on skills.sh | agentskills.io | `npx skills` |
 | microsoft/azure-skills | — | Featured on skills.sh | agentskills.io | Featured cache in hub |
 
@@ -285,10 +291,13 @@ All findings are based on live-verified data from 2026-07-01.
   platforms.
 - **Hermes Agent is not listed** on the carousel despite being a compatible
   client. The showcase may be incomplete or voluntary.
-- **The Client Showcase page drifted (404 → 200) within 4 hours on the same
-  day.** This concretely demonstrates that URL reachability can change
-  between research sessions. Any study of the ecosystem must verify URLs
-  at the time of use, not rely on a one-time snapshot.
+- **The Client Showcase page was 404 at ~02:00 UTC, recovered to 200 by**
+  **~06:24 UTC, then returned to 404.** It was re-verified 404 again in a
+  later session the same day. The recovery was temporary. This concretely
+  demonstrates that URL reachability can change between research sessions
+  — and that a single recovery does not mean permanent availability.
+  Any study of the ecosystem must verify URLs at the time of use, not
+  rely on a one-time snapshot.
 
 ### 5.4 External Marketplaces Are Reachable but Uneven
 
@@ -332,3 +341,21 @@ dependencies, version constraints, or installation requirements).
   snapshots depending on when they last synced.
 - "270K+ SKILL.md files" from SkillsMP is the marketplace's own claim.
   No independent verification was performed.
+
+### Drift Register
+
+Re-verification events recorded after the initial 2026-07-01 snapshot:
+
+| Date | Item | Previous value | Current value | Delta |
+|------|------|----------------|---------------|-------|
+| 2026-07-01 | agentskills.io/client-showcase | 200 at 06:24 UTC | 404 | Reverted to original broken state |
+| 2026-07-01 | addyosmani/agent-skills stars | 68K | 68,290 | +290 (still rounds to ~68K) |
+| 2026-07-01 | anthropics/claude-plugins-official stars | 31.3K | 31,374 | +74 (rounded to ~31K) |
+| 2026-07-01 | agentskills/agentskills stars | 21,302 | 21,322 | +20 |
+| 2026-07-01 | skills.sh | 200 (direct) | 308 (redirect → 200) | Redirect applied; still reachable |
+| 2026-07-01 | agentskills.io (home) | 200 | 200 | Stable |
+| 2026-07-01 | agentskills.io/specification | 200 | 200 | Stable |
+| 2026-07-01 | agentskill.sh | 200 | 200 | Stable |
+| 2026-07-01 | skillsmp.com | 200 | 200 | Stable |
+| 2026-07-01 | clawhub.ai | 200 | 200 | Stable |
+| 2026-07-01 | skilldock.io | 200 | 200 | Stable |
