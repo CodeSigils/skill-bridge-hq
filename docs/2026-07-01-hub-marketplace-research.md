@@ -86,7 +86,7 @@ before depending on any of them.
 | SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. Claims 270K+ indexed SKILL.md files. |
 | ClawHub | https://clawhub.ai/ | 200 | OpenClaw skills/plugins marketplace | 200 entries in hub index. Source quality should be evaluated before use. |
 | skilldock.io | https://skilldock.io/ | 200 | Versioned skill registry | Publish/install workflow. V1 had 10+ repos / 20+ skills. V2 in development. |
-| agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | ~21.3K★ GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. Re-verified 404 on 2026-07-01 (later session). |
+| agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | [![stars](https://img.shields.io/github/stars/agentskills/agentskills)](https://github.com/agentskills/agentskills/stargazers) — GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. Re-verified 404 on 2026-07-01 (later session). |
 
 #### 1.2.1 Discovered: agentskills.io Client Showcase Drift
 
@@ -152,7 +152,7 @@ an oversight, or a stale carousel is unknown.
 |-----------|-----|------------------|--------------------|
 | Hermes Atlas | hermesatlas.com | 178+ repos across 12 categories, weekly star velocity | GitHub stars, descriptions, categories — but not file trees, skill counts, or reference ratios |
 | agentskills.io repo | github.com/agentskills/agentskills | Specification, tools, reference implementation | README only |
-| awesome-copilot | github.com/github/awesome-copilot | Community-curated Copilot resources (~36K★) | Links + categories — not programmatically parseable |
+| awesome-copilot | github.com/github/awesome-copilot | Community-curated Copilot resources ([![stars](https://img.shields.io/github/stars/github/awesome-copilot)](https://github.com/github/awesome-copilot/stargazers)) | Links + categories — not programmatically parseable |
 | anthropics/claude-plugins-official | github.com/anthropics/claude-plugins-official | 37 plugins, 29+ SKILL.md files | Full repo tree (git-cloneable) |
 | openai/skills | github.com/openai/skills | Official Codex skill catalog | Full repo tree (git-cloneable) |
 
@@ -166,10 +166,10 @@ repos that appeared in hub index data and marketplace scans.
 
 | Repo | Stars | Skills | Format | Discovery mechanism |
 |------|-------|--------|--------|--------------------|
-| addyosmani/agent-skills | ~68K | 24 | Flat SKILL.md, no YAML frontmatter | README-based browsing |
-| anthropics/claude-plugins-official | ~31K | 37 plugins, 29+ SKILL.md | agentskills.io + extensions | `.claude-plugin/` directory |
+| addyosmani/agent-skills | [![stars](https://img.shields.io/github/stars/addyosmani/agent-skills)](https://github.com/addyosmani/agent-skills/stargazers) | 24 | Flat SKILL.md, no YAML frontmatter | README-based browsing |
+| anthropics/claude-plugins-official | [![stars](https://img.shields.io/github/stars/anthropics/claude-plugins-official)](https://github.com/anthropics/claude-plugins-official/stargazers) | 37 plugins, 29+ SKILL.md | agentskills.io + extensions | `.claude-plugin/` directory |
 | openai/skills | — | ~20 | agentskills.io | `$skill-installer` CLI |
-| wondelai/skills | ~1.5K | 50 | agentskills.io (book-philosophy format) | Flat root directory |
+| wondelai/skills | [![stars](https://img.shields.io/github/stars/wondelai/skills)](https://github.com/wondelai/skills/stargazers) | 50 | agentskills.io (book-philosophy format) | Flat root directory |
 | vercel-labs/skills | — | Featured on skills.sh | agentskills.io | `npx skills` |
 | microsoft/azure-skills | — | Featured on skills.sh | agentskills.io | Featured cache in hub |
 
@@ -236,7 +236,7 @@ documents how the data was collected so you can reproduce or update it.
 | agentskills.io overview | https://agentskills.io/home | Browser | 42 client logos visible on home page carousel | 2026-07-01 |
 | agentskills.io spec | https://agentskills.io/specification | Browser | `name` + `description` required; optional `ref`, `scripts`, `assets` | 2026-07-01 |
 | agentskills.io client-showcase | https://agentskills.io/client-showcase | Browser | **404 at ~02:00 UTC; 200 by ~06:24 UTC same day** | 2026-07-01 |
-| agentskills.io repo | https://github.com/agentskills/agentskills | Browser | 21,302★ (observed on page) | 2026-07-01 |
+| agentskills.io repo | https://github.com/agentskills/agentskills | Browser | [![stars](https://img.shields.io/github/stars/agentskills/agentskills)](https://github.com/agentskills/agentskills/stargazers) (observed on page) | 2026-07-01 |
 | Hermes Atlas top skills | https://hermesatlas.com/lists/top-skills | Browser | 18 ranked entries with star counts (73.1K, 23.2K, 4.9K etc.) | 2026-07-01 |
 | skills.sh | https://skills.sh/ | HTTP 200 | Primary public leaderboard | 2026-07-01 |
 | agentskill.sh | https://agentskill.sh/ | HTTP 200 | Broad marketplace with quality scores | 2026-07-01 |

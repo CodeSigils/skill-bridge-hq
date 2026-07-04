@@ -270,7 +270,7 @@ catalogs), check:
   by category and star ranking. Most thorough ecosystem directory
   for discovering agent repos across platforms.
 - **awesome-copilot** (github.com/github/awesome-copilot) --
-  ~36K stars, community-curated Copilot resources.
+  [stargazers](https://github.com/github/awesome-copilot/stargazers), community-curated Copilot resources.
 - **anthropics/claude-plugins-official** -- Official Claude
   Code plugins and extensions repo.
 
