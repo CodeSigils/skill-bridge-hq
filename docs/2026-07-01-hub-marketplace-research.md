@@ -365,3 +365,4 @@ Re-verification events recorded after the initial 2026-07-01 snapshot:
 | 2026-07-04 | awesome-copilot stars | ~35.9K | 36,160 | +~260 (now ~36K) |
 | 2026-07-04 | hub index age | 5 weeks stale | ~6 weeks stale | Index not refreshed since 2026-05-26 |
 | 2026-07-04 | Hub catalog scan count | 2,460 | 2,460 | Index unchanged; still accurate |
+
