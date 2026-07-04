@@ -1,82 +1,82 @@
 {
   "version": 1,
-  "description": "Machine-readable URL evidence index for docs/2026-07-01-hub-marketplace-research.md.",
+  "description": "Machine-readable URL evidence index for docs/hub-marketplace-research.md.",
   "urls": [
     {
       "name": "skills.sh",
       "url": "https://skills.sh/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "Primary public leaderboard. Redirects are acceptable when the final status remains 200."
     },
     {
       "name": "agentskill.sh",
       "url": "https://agentskill.sh/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "Cross-platform marketplace."
     },
     {
       "name": "SkillsMP",
       "url": "https://skillsmp.com/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "Broad aggregator."
     },
     {
       "name": "ClawHub",
       "url": "https://clawhub.ai/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "OpenClaw skills/plugins marketplace."
     },
     {
       "name": "skilldock.io",
       "url": "https://skilldock.io/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "Versioned skill registry."
     },
     {
       "name": "agentskills.io",
       "url": "https://agentskills.io/",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2",
+      "source_section": "docs/hub-marketplace-research.md §1.2",
       "notes": "Open specification standard root."
     },
     {
       "name": "agentskills.io (home)",
       "url": "https://agentskills.io/home",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.3",
+      "source_section": "docs/hub-marketplace-research.md §1.3",
       "notes": "Client-carousel evidence source for the 42-client count."
     },
     {
       "name": "agentskills.io (spec)",
       "url": "https://agentskills.io/specification",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §3",
+      "source_section": "docs/hub-marketplace-research.md §3",
       "notes": "Specification page."
     },
     {
       "name": "agentskills.io (showcase)",
       "url": "https://agentskills.io/client-showcase",
       "expected_statuses": [404],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.2.1 and Drift Register",
+      "source_section": "docs/hub-marketplace-research.md §1.2.1 and Drift Register",
       "notes": "Known documented drift: 404 at initial check, temporary 200 recovery, then 404 again. A future 200 is a state change to investigate, not an automatic pass."
     },
     {
       "name": "agentskills.io (repo)",
       "url": "https://github.com/agentskills/agentskills",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §3",
+      "source_section": "docs/hub-marketplace-research.md §3",
       "notes": "GitHub repository for the specification."
     },
     {
       "name": "Hermes Atlas",
       "url": "https://hermesatlas.com/lists/top-skills",
       "expected_statuses": [200],
-      "source_section": "docs/2026-07-01-hub-marketplace-research.md §1.4 and §3",
+      "source_section": "docs/hub-marketplace-research.md §1.4 and §3",
       "notes": "Curated ecosystem directory."
     }
   ]

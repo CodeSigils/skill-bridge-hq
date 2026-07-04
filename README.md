@@ -144,7 +144,7 @@ skill-discovery/
 ├── LICENSE                                 # MIT
 ├── .gitignore
 ├── docs/
-│   ├── 2026-07-01-hub-marketplace-research.md  # evidence base
+│   ├── hub-marketplace-research.md  # evidence base
 │   └── evidence-urls.json                       # machine-checkable URL expectations
 ├── skills/
 │   └── skill-discovery/
@@ -208,7 +208,7 @@ This methodology was formed from live research on 2026-07-01. Key findings:
 - **Concentration risk:** 83.2% of the index comes from 3 sources (skills.sh, lobehub, browse-sh)
 - **Open questions:** 5 documented unknowns (refresh cadence, CLI force-refresh, optional-feature support, top-20 repo patterns, total deduplicated count)
 
-The full research snapshot lives in [`docs/2026-07-01-hub-marketplace-research.md`](docs/2026-07-01-hub-marketplace-research.md)
+The full research snapshot lives in [`docs/hub-marketplace-research.md`](docs/hub-marketplace-research.md)
 and includes a **Drift Register** tracking which claims have been re-verified since publication.
 
 > `docs/` is a repo-only artifact -- it provides provenance and audit trail but does
