@@ -583,7 +583,7 @@ curl -s -o /dev/null -w "%{http_code}" <url>
 A 200 or 3xx response means the source is reachable. 4xx or 5xx means
 skip or fall back.
 
-**URLs to verify (best-effort, last checked 2026-07-01):**
+**URLs to verify (best-effort, last checked 2026-07-04):**
 
 | Source        | URL                            | Status |
 |---------------|--------------------------------|--------|
@@ -619,7 +619,7 @@ If no source returns a match and the search was thorough:
 This methodology was built from live research on 2026-07-01:
 
 - **Hub catalog scan:** 2,460 indexed skills across 7 sources
-- **agentskills.io client count:** 42 confirmed via home page carousel
+- **agentskills.io client count:** [42 confirmed via home page carousel](https://agentskills.io/home)
 - **External marketplaces:** 6 reachable, 1 Showcase page (resolved 404→200 same day)
 - **`hub-explorer` skill (archived):** Source for the search/evaluate/recommend
   pipeline (Hermes-specific references removed for portability)
@@ -653,7 +653,7 @@ Add entries here when a skill is consistently needed across sessions.
 
 - **[tmux](https://www.skills.sh/steipete/clawdis/tmux)** —
   Tmux terminal multiplexer skill: session/panel management, send keys,
-  capture output, prompt checks. 5.1K installs. Security-audited (Gen AI
+  capture output, prompt checks. ~5K installs. Security-audited (Gen AI
   Trust Hub, Socket, Snyk). Source: `steipete/clawdis` on GitHub. Install
   via `npx skills add https://github.com/steipete/clawdis --skill tmux`.
 
