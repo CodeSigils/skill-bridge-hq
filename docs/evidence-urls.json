@@ -49,6 +49,15 @@
       "notes": "OpenClaw skills/plugins marketplace."
     },
     {
+      "name": "CrossAITools",
+      "url": "https://crossaitools.com",
+      "expected_statuses": [
+        200
+      ],
+      "source_section": "docs/hub-marketplace-research.md \u00a71.2",
+      "notes": "Multi-directory: 21K+ skills, 2.5K+ marketplaces."
+    },
+    {
       "name": "skilldock.io",
       "url": "https://skilldock.io/",
       "expected_statuses": [

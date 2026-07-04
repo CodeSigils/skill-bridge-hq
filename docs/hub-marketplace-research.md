@@ -83,8 +83,9 @@ before depending on any of them.
 |-------------|-----|-------------|------|-------|
 | skills.sh | https://skills.sh/ | 200 | Primary public leaderboard | All-time leaderboard, per-skill pages. Installed via `npx skills add`. 1,218 entries in the Hermes hub index. |
 | agentskill.sh | https://agentskill.sh/ | 200 | Cross-platform marketplace | Role/platform filtering, quality scores, security audits. Large catalog. |
-| SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. [Claims 270K+ indexed SKILL.md files](https://skillsmp.com). |
+| SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. [Claims 270K+ indexed SKILL.md files](https://skillsmp.com) (some third-party sources cite 800K+; count could not be independently verified due to Cloudflare). |
 | ClawHub | https://clawhub.ai/ | 200 | OpenClaw skills/plugins marketplace | 200 entries in hub index. Source quality should be evaluated before use. |
+| CrossAITools (Claude Skills Hub) | https://crossaitools.com | 200 | Multi-directory | 21,600+ skills, 2,500+ marketplaces, 12,500+ MCP servers. Incorporates former ClaudeSkills.info and claudemarketplaces.com. Has public JSON API at `/api/skills` (no search endpoint). |
 | skilldock.io | https://skilldock.io/ | 200 | Versioned skill registry | Publish/install workflow. V1 had 10+ repos / 20+ skills. V2 in development. |
 | agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | [![stars](https://img.shields.io/github/stars/agentskills/agentskills)](https://github.com/agentskills/agentskills/stargazers) — GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. Re-verified 404 on 2026-07-01 (later session). |
 
@@ -259,7 +260,7 @@ know about the ecosystem.
 | 2 | Is there a CLI command to force-refresh the hub index? | Not documented in `hermes skills list` or `hermes skills search`. | `hermes help` / `hermes skills --help` review. |
 | 3 | Which agentskills.io clients support optional SKILL.md features (scripts, references)? | Spec marks them as optional; per-platform implementation unknown. | Per-platform testing or documentation review. |
 | 4 | What are the root-level skill repo directory patterns for the top-20 Atlas repos? | Only 7 repos measured; 20 would give statistical confidence. | GitHub API tree queries for each repo (non-mutating). |
-| 5 | How many total unique agent skills exist across all marketplaces? | Upper bound unknown. [SkillsMP claims 270K+ SKILL.md files](https://skillsmp.com) but no deduplication methodology is published. | Cross-marketplace deduplication study. |
+| 5 | How many total unique agent skills exist across all marketplaces? | Upper bound disputed. [SkillsMP claims 270K+ SKILL.md files](https://skillsmp.com) (third-party sources cite 800K+; site blocks automated verification with Cloudflare). CrossAITools claims 21,600+. | Cross-marketplace deduplication study. |
 
 ---
 
@@ -302,7 +303,7 @@ All findings are based on live-verified data from 2026-07-01.
 
 ### 5.4 External Marketplaces Are Reachable but Uneven
 
-All 6 marketplaces verified returned HTTP 200 on 2026-07-01. However:
+All 7 marketplaces verified returned HTTP 200 on 2026-07-01/2026-07-04. However:
 
 - **SkillsMP [claims 270K+ SKILL.md files](https://skillsmp.com)** — this is an order of magnitude
   larger than the hub index. If accurate, the hub is indexing <1% of
@@ -369,4 +370,6 @@ Re-verification events recorded after the initial 2026-07-01 snapshot:
 | 2026-07-04 | Hermes Atlas star counts | Hardcoded (73.1K, 23.2K, 4.9K) | Replaced with live-count notice | Drift eliminated by design |
 | 2026-07-04 | Hub index age note (table) | ~5 weeks | ~5 weeks (now ~6 weeks stale) | Inconsistency with §5.1 body fixed |
 | 2026-07-04 | anthropics/claude-plugins skill count | 37 (exact) | ~37 (approximate) | Softened to reflect snapshot nature |
+| 2026-07-04 | CrossAITools marketplace discovered | Not listed | Added to marketplaces table, SKILL.md §2.1, CI manifest | New marketplace with public JSON API |
+| 2026-07-04 | SkillsMP count dispute noted | 270K (sole claim) | 270K vs 800K (third-party) | Added note; site Cloudflare-blocked |
 

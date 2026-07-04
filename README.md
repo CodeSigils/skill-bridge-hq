@@ -202,7 +202,7 @@ This methodology was formed from live research on 2026-07-01. Key findings:
 
 - **2,460 skills** indexed in the Hermes hub from 7 sources
 - **42 clients** confirmed on agentskills.io (home page carousel)
-- **6 external marketplaces** verified reachable
+- **7 external marketplaces** verified reachable
 - **agentskills.io Client Showcase: 404 at ~02:00 UTC, recovered to 200 by ~06:24 UTC, reverted to 404 later same day** -- drift confirmed within hours
 - **Hub index: ~6 weeks stale** -- freshness check essential
 - **Concentration risk:** 83.2% of the index comes from 3 sources (skills.sh, lobehub, browse-sh)

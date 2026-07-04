@@ -235,11 +235,15 @@ to the next marketplace.
    with quality scores, security audits, and role/platform filters.
 3. **SkillsMP** (https://skillsmp.com/) -- Broad aggregator with
    occupation and category maps. Claims 270K+ indexed files.
-4. **ClawHub** (https://clawhub.ai/) -- OpenClaw skills and plugins
+4. **CrossAITools (Claude Skills Hub)** (https://crossaitools.com) --
+   Multi-directory covering 21,600+ skills, 2,500+ marketplaces, and
+   12,500+ MCP servers. Incorporates claudeskills.info and
+   claudemarketplaces.com. **Has public JSON listing API** (see §2.4).
+5. **ClawHub** (https://clawhub.ai/) -- OpenClaw skills and plugins
    marketplace. Higher risk -- inspect source before use.
-5. **skilldock.io** (https://skilldock.io/) -- Versioned skill
+6. **skilldock.io** (https://skilldock.io/) -- Versioned skill
    registry with publish/install workflow. V2 in development.
-6. **Direct GitHub search** -- Search for `<tool> SKILL.md`,
+7. **Direct GitHub search** -- Search for `<tool> SKILL.md`,
    `<tool> agent skill`, or `<tool> agentskills.io`.
    **Has public REST API** (§2.4).
 
@@ -364,6 +368,22 @@ matches rather than indexed skill metadata), but coverage is broader.
   counts, and is faster
 - GitHub API second — catches skills not indexed by skills.sh, or
   when you need to inspect raw SKILL.md content before recommending
+
+**CrossAITools listing API (tertiary):**
+
+CrossAITools (crossaitools.com) has a public JSON listing API at
+`/api/skills`. Unlike skills.sh, it has no search endpoint — it
+returns a paginated list of all indexed skills. Use it when the
+other APIs return nothing:
+
+```bash
+curl -sL "https://crossaitools.com/api/skills?limit=10"
+```
+
+Each result includes `name`, `description`, `repo`, `stars`,
+`installs`, and `installCommand`. Note that the API exposes only
+a subset of the site's total 21,600+ listed skills (primarily
+partner-indexed content).
 
 ### 2.5 Browser-Based Marketplace Search
 
@@ -713,7 +733,7 @@ This methodology was built from live research on 2026-07-01:
 
 - **Hub catalog scan:** 2,460 indexed skills across 7 sources
 - **agentskills.io client count:** [42 confirmed via home page carousel](https://agentskills.io/home)
-- **External marketplaces:** 6 reachable, 1 Showcase page (resolved 404→200 same day)
+- **External marketplaces:** 7 reachable (verified), 1 Showcase page (resolved 404→200 same day)
 - **`hub-explorer` skill (archived):** Source for the search/evaluate/recommend
   pipeline (Hermes-specific references removed for portability)
 
