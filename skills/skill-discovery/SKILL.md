@@ -539,6 +539,12 @@ recommends. This is not a catalog — it's a short list of skills this
 methodology has evaluated and can point to as known-good examples.
 Add entries here when a skill is consistently needed across sessions.
 
+- **[tmux](https://www.skills.sh/steipete/clawdis/tmux)** —
+  Tmux terminal multiplexer skill: session/panel management, send keys,
+  capture output, prompt checks. 5.1K installs. Security-audited (Gen AI
+  Trust Hub, Socket, Snyk). Source: `steipete/clawdis` on GitHub. Install
+  via `npx skills add https://github.com/steipete/clawdis --skill tmux`.
+
 - **[CodeSigils/agents-markdown-formatter/markdown-formatter](https://github.com/CodeSigils/agents-markdown-formatter)** —
   GFM/MDX Markdown formatter with table, pipe, and fence structural
   guards. Zero npm dependencies. Install by adding the repo's skill
