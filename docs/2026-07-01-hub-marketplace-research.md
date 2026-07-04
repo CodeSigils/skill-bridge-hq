@@ -1,7 +1,7 @@
 ---
 status: reference
 date: 2026-07-01
-updated: 2026-07-01
+updated: 2026-07-04
 expires: 2026-10-01
 purpose: >
   Reference map of the agent-skill ecosystem as of mid-2026 — hub indexes,
@@ -359,3 +359,9 @@ Re-verification events recorded after the initial 2026-07-01 snapshot:
 | 2026-07-01 | skillsmp.com | 200 | 200 | Stable |
 | 2026-07-01 | clawhub.ai | 200 | 200 | Stable |
 | 2026-07-01 | skilldock.io | 200 | 200 | Stable |
+| 2026-07-04 | addyosmani/agent-skills stars | 68,290 (drift register) | 68,878 | +588 (now ~69K) |
+| 2026-07-04 | anthropics/claude-plugins-official stars | 31,374 (drift register) | 31,532 | +158 (still ~31K) |
+| 2026-07-04 | agentskills/agentskills stars | 21,322 (drift register) | 22,195 | +873 (now ~22K) |
+| 2026-07-04 | awesome-copilot stars | ~35.9K | 36,160 | +~260 (now ~36K) |
+| 2026-07-04 | hub index age | 5 weeks stale | ~6 weeks stale | Index not refreshed since 2026-05-26 |
+| 2026-07-04 | Hub catalog scan count | 2,460 | 2,460 | Index unchanged; still accurate |

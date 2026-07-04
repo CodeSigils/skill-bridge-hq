@@ -148,7 +148,7 @@ skill-discovery/
 │   └── evidence-urls.json                       # machine-checkable URL expectations
 ├── skills/
 │   └── skill-discovery/
-│       └── SKILL.md                        # the methodology (~460 lines)
+│       └── SKILL.md                        # the methodology (~663 lines)
 ├── .agents/
 │   └── skills/
 │       └── skill-discovery -> ../../skills/skill-discovery/  # symlink
@@ -204,7 +204,7 @@ This methodology was formed from live research on 2026-07-01. Key findings:
 - **42 clients** confirmed on agentskills.io (home page carousel)
 - **6 external marketplaces** verified reachable
 - **agentskills.io Client Showcase: 404 at ~02:00 UTC, recovered to 200 by ~06:24 UTC, reverted to 404 later same day** -- drift confirmed within hours
-- **Hub index: 5 weeks stale** -- freshness check essential
+- **Hub index: ~6 weeks stale** -- freshness check essential
 - **Concentration risk:** 83.2% of the index comes from 3 sources (skills.sh, lobehub, browse-sh)
 - **Open questions:** 5 documented unknowns (refresh cadence, CLI force-refresh, optional-feature support, top-20 repo patterns, total deduplicated count)
 
