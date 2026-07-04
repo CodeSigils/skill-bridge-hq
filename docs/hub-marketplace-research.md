@@ -37,7 +37,7 @@ needed for a local search.
 | Source | Skills | Share | Trust tier | Notes |
 |--------|--------|-------|------------|-------|
 | skills.sh | 1,218 | 49.5% | Community | Primary public leaderboard. Powers the featured cache. Install via `npx skills add` |
-| lobehub | 500 | 20.3% | Community | LobeChat skill catalog |
+| lobehub | 500 | 20.3% | Community | LobeChat plugin store, not a general agent-skill marketplace |
 | browse-sh | 330 | 13.4% | Community | Browser-level skill collection |
 | clawhub | 200 | 8.1% | Evaluate | OpenClaw marketplace — source quality not yet confirmed |
 | github | 127 | 5.2% | High | Community repos, fully transparent |
