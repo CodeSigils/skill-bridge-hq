@@ -83,7 +83,7 @@ before depending on any of them.
 |-------------|-----|-------------|------|-------|
 | skills.sh | https://skills.sh/ | 200 | Primary public leaderboard | All-time leaderboard, per-skill pages. Installed via `npx skills add`. 1,218 entries in the Hermes hub index. |
 | agentskill.sh | https://agentskill.sh/ | 200 | Cross-platform marketplace | Role/platform filtering, quality scores, security audits. Large catalog. |
-| SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. Claims 270K+ indexed SKILL.md files. |
+| SkillsMP | https://skillsmp.com/ | 200 | Broad aggregator | Occupation and category maps. [Claims 270K+ indexed SKILL.md files](https://skillsmp.com). |
 | ClawHub | https://clawhub.ai/ | 200 | OpenClaw skills/plugins marketplace | 200 entries in hub index. Source quality should be evaluated before use. |
 | skilldock.io | https://skilldock.io/ | 200 | Versioned skill registry | Publish/install workflow. V1 had 10+ repos / 20+ skills. V2 in development. |
 | agentskills.io | https://agentskills.io/ | 200 (spec page) | Open specification standard | [![stars](https://img.shields.io/github/stars/agentskills/agentskills)](https://github.com/agentskills/agentskills/stargazers) — GitHub repo. Client Showcase was 404 at ~02:00 UTC, returned 200 by ~06:24 UTC same day — drift confirmed within hours. Re-verified 404 on 2026-07-01 (later session). |
@@ -107,7 +107,7 @@ trusted.
 
 ### 1.3 agentskills.io Client Ecosystem
 
-Live count from the home page carousel (deduplicated): **42 client platforms**
+Live count from the [home page carousel](https://agentskills.io/home) (deduplicated): **42 client platforms**
 as of 2026-07-01.
 
 | Client | Category | URL |
@@ -150,7 +150,7 @@ an oversight, or a stale carousel is unknown.
 
 | Directory | URL | What it contains | Machine-parseable? |
 |-----------|-----|------------------|--------------------|
-| Hermes Atlas | hermesatlas.com | 178+ repos across 12 categories, weekly star velocity | GitHub stars, descriptions, categories — but not file trees, skill counts, or reference ratios |
+| Hermes Atlas | [hermesatlas.com](https://hermesatlas.com) | 178+ repos across 12 categories, weekly star velocity | GitHub stars, descriptions, categories — but not file trees, skill counts, or reference ratios |
 | agentskills.io repo | github.com/agentskills/agentskills | Specification, tools, reference implementation | README only |
 | awesome-copilot | github.com/github/awesome-copilot | Community-curated Copilot resources ([![stars](https://img.shields.io/github/stars/github/awesome-copilot)](https://github.com/github/awesome-copilot/stargazers)) | Links + categories — not programmatically parseable |
 | anthropics/claude-plugins-official | github.com/anthropics/claude-plugins-official | 37 plugins, 29+ SKILL.md files | Full repo tree (git-cloneable) |
@@ -234,7 +234,7 @@ documents how the data was collected so you can reproduce or update it.
 | Hermes hub index (local cache) | `~/.hermes/skills/.hub/index-cache/hermes-index.json` | Live cache read | 2,460 skills, 7 sources, index dated 2026-05-26 | 2026-07-01 |
 | Hermes hub featured cache | `~/.hermes/skills/.hub/index-cache/skills_sh_featured.json` | Live cache read | 100 featured skills from skills.sh | 2026-07-01 |
 | Hermes installed skills | `hermes skills list` | CLI command | ~240 installed, mix of builtin/local/skills.sh | 2026-07-01 |
-| agentskills.io overview | https://agentskills.io/home | Browser | 42 client logos visible on home page carousel | 2026-07-01 |
+| agentskills.io overview | https://agentskills.io/home | Browser | [42 client logos visible on home page carousel](https://agentskills.io/home) | 2026-07-01 |
 | agentskills.io spec | https://agentskills.io/specification | Browser | `name` + `description` required; optional `ref`, `scripts`, `assets` | 2026-07-01 |
 | agentskills.io client-showcase | https://agentskills.io/client-showcase | Browser | **404 at ~02:00 UTC; 200 by ~06:24 UTC same day** | 2026-07-01 |
 | agentskills.io repo | https://github.com/agentskills/agentskills | Browser | [![stars](https://img.shields.io/github/stars/agentskills/agentskills)](https://github.com/agentskills/agentskills/stargazers) (observed on page) | 2026-07-01 |
@@ -259,7 +259,7 @@ know about the ecosystem.
 | 2 | Is there a CLI command to force-refresh the hub index? | Not documented in `hermes skills list` or `hermes skills search`. | `hermes help` / `hermes skills --help` review. |
 | 3 | Which agentskills.io clients support optional SKILL.md features (scripts, references)? | Spec marks them as optional; per-platform implementation unknown. | Per-platform testing or documentation review. |
 | 4 | What are the root-level skill repo directory patterns for the top-20 Atlas repos? | Only 7 repos measured; 20 would give statistical confidence. | GitHub API tree queries for each repo (non-mutating). |
-| 5 | How many total unique agent skills exist across all marketplaces? | Upper bound unknown. SkillsMP claims 270K+ SKILL.md files but no deduplication methodology is published. | Cross-marketplace deduplication study. |
+| 5 | How many total unique agent skills exist across all marketplaces? | Upper bound unknown. [SkillsMP claims 270K+ SKILL.md files](https://skillsmp.com) but no deduplication methodology is published. | Cross-marketplace deduplication study. |
 
 ---
 
@@ -304,7 +304,7 @@ All findings are based on live-verified data from 2026-07-01.
 
 All 6 marketplaces verified returned HTTP 200 on 2026-07-01. However:
 
-- **SkillsMP claims 270K+ SKILL.md files** — this is an order of magnitude
+- **SkillsMP [claims 270K+ SKILL.md files](https://skillsmp.com)** — this is an order of magnitude
   larger than the hub index. If accurate, the hub is indexing <1% of
   available skills. The claim could not be independently verified.
 - **skilldock.io** is the only versioned registry with a publish/install
@@ -326,13 +326,13 @@ dependencies, version constraints, or installation requirements).
 
 - Hub index data: local cache read from `~/.hermes/skills/.hub/index-cache/`
 - Marketplace status: `curl -s -o /dev/null -w "%{http_code}" <url>`
-- Client ecosystem: manual browser inspection of agentskills.io home page carousel, deduplicated by logo
+- Client ecosystem: manual browser inspection of [agentskills.io home page carousel](https://agentskills.io/home), deduplicated by logo
 - Platform repos: GitHub API and manual repo inspection
 - All timestamps are UTC
 
 ### Known Limitations
 
-- The 42-client count is from a home page carousel — logos that were not
+- The 42-client count is from a [home page carousel](https://agentskills.io/home) — logos that were not
   rendered (scroll depth) may have been missed.
 - Marketplace HTTP status is a liveness check only, not a content-quality
   assessment. A 200 means the server responded, not that the content is
@@ -340,7 +340,7 @@ dependencies, version constraints, or installation requirements).
 - Skill counts (2,460 indexed, 240 installed, 100 featured) are from a
   single Hermes agent instance. Other agents may have different index
   snapshots depending on when they last synced.
-- "270K+ SKILL.md files" from SkillsMP is the marketplace's own claim.
+- "270K+ SKILL.md files" from [SkillsMP](https://skillsmp.com) is the marketplace's own claim.
   No independent verification was performed.
 
 ### Drift Register
