@@ -18,8 +18,10 @@ Exit code 1 = one or more URLs differs from the manifest.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -55,37 +57,51 @@ def validate_entry(entry: dict[str, Any]) -> None:
             raise ValueError("expected_statuses must contain integers")
 
 
-def check_url(url: str) -> tuple[int | str, int | str]:
-    """Return (final_status_code, redirect_count) for one URL."""
+def check_url(url: str, content_type: str | None = None, temp_dir: str | None = None) -> tuple[int | str, int | str, str | None]:
+    """Return (final_status_code, redirect_count, content_or_error) for one URL.
+
+    When content_type is \"json\", captures response body via temp file and validates JSON.
+    """
     try:
+        args = [
+            "curl",
+            "-s",
+            "-w",
+            "%{http_code} %{num_redirects}",
+            "--connect-timeout",
+            "5",
+            "--max-time",
+            "10",
+            "-L",
+            url,
+        ]
+
+        body_path = None
+        if content_type == "json":
+            # Write body to a temp file so -w output is clean on stdout
+            fd, body_path = tempfile.mkstemp(prefix="hermes-verify-body-", suffix=".json")
+            os.close(fd)
+            args.extend(["-o", body_path])
+        else:
+            args.extend(["-o", "/dev/null"])
+
         result = subprocess.run(
-            [
-                "curl",
-                "-s",
-                "-o",
-                "/dev/null",
-                "-w",
-                "%{http_code} %{num_redirects}",
-                "--max-time",
-                "10",
-                "-L",
-                url,
-            ],
+            args,
             capture_output=True,
             text=True,
             timeout=15,
             check=False,
         )
     except subprocess.TimeoutExpired:
-        return "TIMEOUT", "-"
+        return "TIMEOUT", "-", None
     except OSError as exc:
-        return "ERROR", str(exc)
+        return "ERROR", str(exc), None
 
     parts = result.stdout.strip().split()
-    if result.returncode != 0 or len(parts) != 2:
-        return "ERROR", result.stderr.strip() or f"curl exited {result.returncode}"
+    if result.returncode != 0 or len(parts) < 2:
+        return "ERROR", result.stderr.strip() or f"curl exited {result.returncode}", None
 
-    status_text, redirect_text = parts
+    status_text, redirect_text = parts[0], parts[1]
     try:
         status: int | str = int(status_text)
     except ValueError:
@@ -94,7 +110,26 @@ def check_url(url: str) -> tuple[int | str, int | str]:
         redirects: int | str = int(redirect_text)
     except ValueError:
         redirects = redirect_text
-    return status, redirects
+
+    body = result.stdout  # full output (includes -w fields after body when captured)
+    if content_type == "json":
+        # Read body from temp file, then clean up
+        body = ""
+        try:
+            if body_path:
+                body = Path(body_path).read_text(encoding="utf-8")
+                os.unlink(body_path)
+        except OSError:
+            pass
+
+        try:
+            json.loads(body)
+        except (json.JSONDecodeError, ValueError):
+            return status, redirects, "INVALID_JSON"
+
+        return status, redirects, "VALID"
+
+    return status, redirects, None
 
 
 def classify_status(status: int | str, expected_statuses: list[int]) -> str:
@@ -108,37 +143,45 @@ def main() -> int:
     entries = load_manifest()
 
     print("=== Evidence URL Re-verification ===")
-    print(f"{'Name':<30s} {'Status':<8s} {'Expected':<12s} {'Redirects':<9s} {'Note':<10s}")
-    print("-" * 78)
+    print(f"{'Name':<30s} {'Status':<8s} {'Expected':<12s} {'Redirects':<9s} {'Content':<12s} {'Note':<10s}")
+    print("-" * 90)
 
     drift_found = False
     for entry in sorted(entries, key=lambda item: item["name"].lower()):
         try:
             validate_entry(entry)
         except ValueError as exc:
-            print(f"  {entry.get('name', '<unnamed>'):<30s} {'-':<8s} {'-':<12s} {'-':<9s} MANIFEST: {exc}")
+            print(f"  {entry.get('name', '<unnamed>'):<30s} {'-':<8s} {'-':<12s} {'-':<9s} {'-':<12s} MANIFEST: {exc}")
             drift_found = True
             continue
 
-        status, redirects = check_url(entry["url"])
+        content_type = entry.get("content_type")
+        status, redirects, content = check_url(entry["url"], content_type)
         expected = entry["expected_statuses"]
         note = classify_status(status, expected)
         if note == "DRIFT":
             drift_found = True
 
+        # Content check trumps status check for JSON endpoints
+        content_label = content or "—"
+        if content_type == "json" and content == "INVALID_JSON":
+            note = "BROKEN"
+            drift_found = True
+
         expected_text = "/".join(str(code) for code in expected)
         marker = "  ← DRIFT" if note == "DRIFT" else ""
+        marker = "  ← BROKEN" if note == "BROKEN" else marker
         print(
             f"  {entry['name']:<30s} {str(status):<8s} {expected_text:<12s} "
-            f"{str(redirects):<9s} {note:<10s}{marker}"
+            f"{str(redirects):<9s} {content_label:<12s} {note:<10s}{marker}"
         )
 
     if drift_found:
-        print("\nRESULT: Drift detected — one or more URLs differ from docs/evidence-urls.json.")
+        print("\nRESULT: Drift or broken content detected — one or more URLs differ from docs/evidence-urls.json.")
         print("Update the manifest and research doc together after investigating the changed URL state.")
         return 1
 
-    print("\nRESULT: All URLs match documented expected state")
+    print("\nRESULT: All URLs match documented expected state and content validates OK")
     return 0
 
 
