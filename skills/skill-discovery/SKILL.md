@@ -24,13 +24,18 @@ match is found.
 ```
 1. Catalog search    → local index (keyword, tag, source filter)
 2. Featured search   → curated / featured sources
-3. External scan     → marketplaces, aggregators, GitHub
-4. Build from scratch → when nothing matches
+3. Marketplace scan  → direct HTTP/API queries against known marketplaces
+4. Browser search    → interactive browser search on JS-rendered marketplaces
+5. Web research      → search engines, GitHub search, blog posts
+6. Build from scratch → when nothing matches
 ```
 
 Always start at stage 1 and proceed until a match is found that
 passes the Evaluation Rubric (§4). Before any search, check
-catalog freshness (§1.1).
+catalog freshness (§1.1). Stage 4 (browser search) and stage 5
+(web research) require browser or web-search tooling available
+to the agent — skip them if the agent has no web access and
+report which stages were skipped.
 
 ---
 
@@ -269,6 +274,86 @@ catalogs), check:
 - **anthropics/claude-plugins-official** -- Official Claude
   Code plugins and extensions repo.
 
+### 2.4 Browser-Based Marketplace Search
+
+Many marketplaces (skills.sh, agentskill.sh) are JavaScript-rendered
+single-page applications. A simple `curl` probe only checks whether
+the server responds; it cannot search for skills, extract results,
+or read SKILL.md content from rendered pages. When HTTP/API probes
+return no usable data, use a browser to search interactively.
+
+**Workflow:**
+
+1. Verify the marketplace is reachable (section 7), then navigate
+   to its search URL with your keyword as a query parameter:
+   ```
+   browser_navigate("https://skills.sh/search?q=<keyword>")
+   ```
+2. If the page is a JS SPA, the search box may be pre-filled but
+   results not yet loaded. Press Enter or click the search button
+   to trigger the search.
+3. **Read the results from the rendered snapshot.** Each result
+   typically shows rank, skill name, repository name, and install
+   count — enough for a first pass tier classification (section 4.2).
+4. **Click through to top candidates** to inspect the full SKILL.md
+   content, security audit badges, and install command.
+5. **Read the raw SKILL.md** from the source repository when the
+   marketplace page only shows a summary. Most marketplaces link
+   to the source repo; use `curl` or the browser to fetch:
+   ```
+   curl -sL "https://raw.githubusercontent.com/<owner>/<repo>/main/skills/<skill>/SKILL.md"
+   ```
+6. **Apply the evaluation rubric (section 4)** to each candidate —
+   same criteria as catalog search results.
+
+**Pitfalls:**
+- Bot detection varies. If a marketplace blocks the browser session,
+  fall back to curl/API methods or try a different marketplace.
+- Some marketplaces have a search API even if the main page is a
+   SPA. Check `https://skills.sh/api/search?q=<keyword>` or similar
+  before falling through to the browser.
+- Results are sorted by install count, which biases toward older
+  skills. Check the last few pages for newer entries.
+
+### 2.5 General Web Research
+
+When structured marketplaces return nothing, use general-purpose
+web research to find skills through search engines, blog posts,
+documentation, and community discussions. This is the widest net
+and the final fallback before building from scratch.
+
+**Search patterns:**
+
+```
+"<domain>" SKILL.md
+"<domain>" agent skill
+"<domain>" agentskills.io
+site:github.com "<domain>" SKILL.md
+"<domain>" terminal multiplexer  (when the exact domain term is obscure)
+best agent skill for "<domain>"
+```
+
+**Sources to check:**
+
+| Source | Search method | Notes |
+|--------|---------------|-------|
+| GitHub code search | API or browser | Search for `SKILL.md` + keyword. Some repos don't use agentskills.io format but still contain useful instructions. |
+| GitHub topic search | `https://github.com/topics/<topic>` | Browse repos by topic tag (e.g., `agent-skill`, `claude-skill`). |
+| Blog posts / tutorials | Browser search engine | Agents and their skills are often described in blog posts that link to or describe the skill. |
+| Platform documentation | Vendor docs (curated) | Official skill registries (Anthropic, OpenAI Codex, Gemini CLI) may list skills not indexed by third-party marketplaces. |
+| Community discussion | Discord/forum archives | New skills often appear in community channels before they reach marketplaces. |
+
+**Workflow:**
+
+1. Search for `"<keyword>" SKILL.md` across multiple sources
+2. For each result, evaluate whether it contains agentskills.io
+   frontmatter or usable skill instructions
+3. Apply the evaluation rubric (section 4)
+4. If the best result is a blog post that describes a skill without
+   providing a SKILL.md file, note the approach for section 3
+   (skill creation fallback) rather than recommending the post
+   directly
+
 ---
 
 ## Section 3: Skill Creation Fallback
@@ -431,6 +516,28 @@ coverage before concluding no matches exist:
 4. **Expand your search method** before falling back to higher
    stages of the fallback chain.
 
+### Pattern 5: Web Research Fallback
+
+When all structured sources return nothing, research the web
+using search engines, GitHub topic pages, and vendor docs:
+
+```
+Task: "find ssh skill"
+Marketplace returns: 40 results but all are off-domain or partial
+→ Web research search terms:
+  "ssh terminal multiplexer SKILL.md"
+  "ssh remote access agent skill"
+  site:github.com "ssh" "SKILL.md"
+→ Check vendor skill registries:
+  https://github.com/anthropics/claude-plugins-official (search repo for "ssh")
+  https://github.com/openai/skills (browse catalog)
+  https://github.com/topics/agent-skill (browse by topic)
+```
+
+For each web result, apply the same evaluation rubric (§4). A blog
+post describing a skill approach without providing SKILL.md is a
+signal for §3 (skill creation fallback), not a recommendation.
+
 ---
 
 ## Section 6: Task-to-Search-Term Examples
@@ -495,9 +602,14 @@ time before relying on it.
 
 If no source returns a match and the search was thorough:
 
-1. Report what was searched (catalog, featured, which marketplaces)
-2. Offer to build a minimal skill (Section 3)
-3. If the skill already exists somewhere not indexed, note the gap
+1. Report what was searched (catalog, featured, marketplaces,
+   browser searches, web research) and which stages were skipped
+   due to missing tooling
+2. Check if you have browser tooling that wasn't used — many
+   marketplaces require a browser to render search results
+   (see §2.4)
+3. Offer to build a minimal skill (Section 3)
+4. If the skill already exists somewhere not indexed, note the gap
    for future catalog ingestion
 
 ---
