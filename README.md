@@ -186,7 +186,7 @@ When invoked, `skill-discovery` guides any agent through:
 4. **Depth-aware search** -- handle flat and categorized skill directories correctly
 5. **Source filtering** -- prefer official over community sources
 6. **Featured/curated source search** -- when keyword search is thin
-7. **External marketplace scan** -- fallback through marketplaces and GitHub
+7. **Marketplace API search** -- query public JSON APIs (skills.sh, GitHub) programmatically
 8. **Evaluation rubric** -- systematically assess each candidate, including depth and keyword-expansion checks
 9. **Skill creation fallback** -- build a minimal skill when nothing matches
 

@@ -24,7 +24,7 @@ match is found.
 ```
 1. Catalog search    → local index (keyword, tag, source filter)
 2. Featured search   → curated / featured sources
-3. Marketplace scan  → direct HTTP/API queries against known marketplaces
+3. Marketplace API   → public JSON APIs (skills.sh, GitHub)
 4. Browser search    → interactive browser search on JS-rendered marketplaces
 5. Web research      → search engines, GitHub search, blog posts
 6. Build from scratch → when nothing matches
@@ -32,10 +32,11 @@ match is found.
 
 Always start at stage 1 and proceed until a match is found that
 passes the Evaluation Rubric (§4). Before any search, check
-catalog freshness (§1.1). Stage 4 (browser search) and stage 5
-(web research) require browser or web-search tooling available
-to the agent — skip them if the agent has no web access and
-report which stages were skipped.
+catalog freshness (§1.1). Stages 1-3 (catalog, featured, API) can
+often be done with HTTP/curl alone. Stage 4 (browser search) and
+stage 5 (web research) require browser or web-search tooling
+available to the agent — skip them if the agent has no web access
+and report which stages were skipped.
 
 ---
 
@@ -274,13 +275,95 @@ catalogs), check:
 - **anthropics/claude-plugins-official** -- Official Claude
   Code plugins and extensions repo.
 
-### 2.4 Browser-Based Marketplace Search
+### 2.4 Marketplace API Search
 
-Many marketplaces (skills.sh, agentskill.sh) are JavaScript-rendered
-single-page applications. A simple `curl` probe only checks whether
-the server responds; it cannot search for skills, extract results,
-or read SKILL.md content from rendered pages. When HTTP/API probes
-return no usable data, use a browser to search interactively.
+Some marketplaces expose public JSON APIs that let agents search for
+skills programmatically — no browser needed. This is faster and more
+reliable than browser-based search. Try API search before falling
+back to interactive browsing (§2.5).
+
+**skills.sh search API (primary):**
+
+skills.sh has a public, unauthenticated search endpoint:
+
+```
+GET https://skills.sh/api/search?q=<keyword>
+```
+
+Response format (JSON):
+
+```json
+{
+  "query": "tmux",
+  "searchType": "fuzzy",
+  "skills": [
+    {
+      "id": "owner/repo/skill-name",
+      "skillId": "tmux",
+      "name": "tmux",
+      "installs": 5082,
+      "source": "owner/repo"
+    }
+  ],
+  "count": 32,
+  "duration_ms": 256
+}
+```
+
+Extract results with any HTTP-capable agent tool:
+
+```bash
+curl -sL "https://skills.sh/api/search?q=tmux" | \
+  python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+print(f\"Found {data['count']} skills for '{data['query']}':\")
+for s in data['skills']:
+    print(f\"  {s['skillId']} — {s['installs']} installs — {s['source']}\")
+"
+```
+
+**Features:**
+- No API key, no authentication, no rate limiting observed
+- Fuzzy search (min 2 characters)
+- Results are sorted by install count (most popular first)
+- Each result includes `name`, `installs`, and `source` (GitHub owner/repo)
+
+**Limitations:**
+- Returns max ~30 results — deeper results may require refinement
+- No pagination parameters observed
+- No filtering by platform, category, or audit status
+- Install counts are not real-time (cached between refreshes)
+
+**GitHub API (secondary):**
+
+GitHub's code search can find skills even when they're not indexed by
+skills.sh. Use the REST API to search for `SKILL.md` files in public
+repositories:
+
+```bash
+curl -sL "https://api.github.com/search/code?q=tmux+SKILL.md&per_page=10"
+```
+
+This returns repositories that contain a SKILL.md file matching your
+keyword. Results are less structured than skills.sh (free-text file
+matches rather than indexed skill metadata), but coverage is broader.
+
+**When to use each API:**
+- skills.sh first — it's designed for skill discovery, has install
+  counts, and is faster
+- GitHub API second — catches skills not indexed by skills.sh, or
+  when you need to inspect raw SKILL.md content before recommending
+
+### 2.5 Browser-Based Marketplace Search
+
+When API search (§2.4) returns no results — either because the
+marketplace has no public API, or the keyword didn't match — use a
+browser to search interactively. Most marketplaces (skills.sh,
+agentskill.sh) are JavaScript-rendered single-page applications. A
+simple `curl` probe only checks whether the server responds; it
+cannot search for skills, extract results, or read SKILL.md content
+from rendered pages.
 
 **Workflow:**
 
@@ -315,7 +398,7 @@ return no usable data, use a browser to search interactively.
 - Results are sorted by install count, which biases toward older
   skills. Check the last few pages for newer entries.
 
-### 2.5 General Web Research
+### 2.6 General Web Research
 
 When structured marketplaces return nothing, use general-purpose
 web research to find skills through search engines, blog posts,
@@ -607,7 +690,7 @@ If no source returns a match and the search was thorough:
    due to missing tooling
 2. Check if you have browser tooling that wasn't used — many
    marketplaces require a browser to render search results
-   (see §2.4)
+   (see §2.5)
 3. Offer to build a minimal skill (Section 3)
 4. If the skill already exists somewhere not indexed, note the gap
    for future catalog ingestion
