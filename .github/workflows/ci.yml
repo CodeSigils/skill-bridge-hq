@@ -34,10 +34,12 @@ jobs:
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       - name: Install dependencies
-        run: pip install pyyaml
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install PyYAML==6.0.3
       - name: Check for Hermes-specific references
-        run: python .github/scripts/ci-check.py
+        run: .venv/bin/python .github/scripts/ci-check.py
       - name: Validate docs frontmatter
-        run: python .github/scripts/validate-docs.py
+        run: .venv/bin/python .github/scripts/validate-docs.py
       - name: Verify marketplace URLs
-        run: python .github/scripts/verify-marketplace-urls.py
+        run: .venv/bin/python .github/scripts/verify-marketplace-urls.py

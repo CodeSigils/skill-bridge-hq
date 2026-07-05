@@ -15,3 +15,8 @@ content or CI configuration, please open a public issue on GitHub.
 Do **not** open a public issue if the vulnerability involves the GitHub
 Actions workflow (e.g., leaked secrets in CI logs). Report privately to the
 repository owner via GitHub's security advisory tool.
+
+## Commit Signing
+
+Maintainer commits from 2026-07-05 onward are SSH-signed. Earlier commits may
+be unsigned and are retained to avoid rewriting public history.
