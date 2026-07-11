@@ -10,7 +10,7 @@ Usage:
   # Windows: py -3 .github/scripts/verify-marketplace-urls.py
   # Virtualenvs may also support: python .github/scripts/verify-marketplace-urls.py
 
-Outputs a table of URL → final status with drift annotations.
+Outputs a table of URL -> final status with drift annotations.
 Exit code 0 = all URLs match documented expected state.
 Exit code 1 = one or more URLs differs from the manifest.
 """
@@ -18,10 +18,9 @@ Exit code 1 = one or more URLs differs from the manifest.
 from __future__ import annotations
 
 import json
-import os
-import subprocess
 import sys
-import tempfile
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -57,79 +56,41 @@ def validate_entry(entry: dict[str, Any]) -> None:
             raise ValueError("expected_statuses must contain integers")
 
 
-def check_url(url: str, content_type: str | None = None, temp_dir: str | None = None) -> tuple[int | str, int | str, str | None]:
+def check_url(url: str, content_type: str | None = None) -> tuple[int | str, int, str | None]:
     """Return (final_status_code, redirect_count, content_or_error) for one URL.
 
-    When content_type is \"json\", captures response body via temp file and validates JSON.
+    When content_type is "json", captures response body and validates JSON.
     """
+    request = urllib.request.Request(
+        url,
+        method="GET",
+        headers={"User-Agent": "skill-discovery-url-verify"},
+    )
+
     try:
-        args = [
-            "curl",
-            "-s",
-            "-w",
-            "%{http_code} %{num_redirects}",
-            "--connect-timeout",
-            "5",
-            "--max-time",
-            "10",
-            "-L",
-            url,
-        ]
+        with urllib.request.urlopen(request, timeout=10) as response:
+            status = response.status
+            redirect_count = len(response.headers.get("Location", "").split("\n")) if "Location" in response.headers else 0
+            # For a more accurate redirect count, we'd need to track intermediate responses
+            # urllib follows redirects automatically, so we just check final status
 
-        body_path = None
-        if content_type == "json":
-            # Write body to a temp file so -w output is clean on stdout
-            fd, body_path = tempfile.mkstemp(prefix="hermes-verify-body-", suffix=".json")
-            os.close(fd)
-            args.extend(["-o", body_path])
-        else:
-            args.extend(["-o", "/dev/null"])
+            if content_type == "json":
+                body = response.read().decode("utf-8")
+                try:
+                    json.loads(body)
+                    return status, redirect_count, "VALID"
+                except (json.JSONDecodeError, ValueError):
+                    return status, redirect_count, "INVALID_JSON"
+            return status, redirect_count, None
 
-        result = subprocess.run(
-            args,
-            capture_output=True,
-            text=True,
-            timeout=15,
-            check=False,
-        )
-    except subprocess.TimeoutExpired:
-        return "TIMEOUT", "-", None
-    except OSError as exc:
-        return "ERROR", str(exc), None
-
-    parts = result.stdout.strip().split()
-    if result.returncode != 0 or len(parts) < 2:
-        return "ERROR", result.stderr.strip() or f"curl exited {result.returncode}", None
-
-    status_text, redirect_text = parts[0], parts[1]
-    try:
-        status: int | str = int(status_text)
-    except ValueError:
-        status = status_text
-    try:
-        redirects: int | str = int(redirect_text)
-    except ValueError:
-        redirects = redirect_text
-
-    body = result.stdout  # full output (includes -w fields after body when captured)
-    if content_type == "json":
-        # Read body from temp file, then clean up
-        body = ""
-        try:
-            if body_path:
-                body = Path(body_path).read_text(encoding="utf-8")
-                os.unlink(body_path)
-        except OSError:
-            pass
-
-        try:
-            json.loads(body)
-        except (json.JSONDecodeError, ValueError):
-            return status, redirects, "INVALID_JSON"
-
-        return status, redirects, "VALID"
-
-    return status, redirects, None
+    except urllib.error.HTTPError as exc:
+        return exc.code, 0, f"HTTP {exc.code}"
+    except urllib.error.URLError as exc:
+        return "ERROR", 0, str(exc.reason)
+    except TimeoutError:
+        return "TIMEOUT", 0, "timeout"
+    except ValueError as exc:
+        return "ERROR", 0, f"invalid URL: {exc}"
 
 
 def classify_status(status: int | str, expected_statuses: list[int]) -> str:

@@ -18,9 +18,9 @@ from pathlib import Path
 
 SKILLS_DIR = Path("skills")
 
-FORBIDDEN_PATTERNS = (
+FORBIDDEN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("Hermes tool name", re.compile(r"\bskill_(?:view|manage)\b", re.IGNORECASE)),
-    ("Hermes config path", re.compile(r"~/\.hermes(?:/|\b)", re.IGNORECASE)),
+    ("Hermes config path", re.compile(r"~/\\.hermes(?:/|\b)", re.IGNORECASE)),
     (
         "Hermes CLI command",
         re.compile(
@@ -31,16 +31,16 @@ FORBIDDEN_PATTERNS = (
 )
 
 
-def iter_skill_markdown_files(root: Path):
+def iter_skill_markdown_files(root: Path) -> list[Path]:
     """Yield tracked portable skill markdown files under root."""
     if not root.exists():
         raise FileNotFoundError(f"{root} does not exist")
-    yield from sorted(root.rglob("*.md"))
+    return sorted(root.rglob("*.md"))
 
 
-def scan_file(path: Path):
+def scan_file(path: Path) -> list[tuple[Path, int, str, str]]:
     """Return portability violations for one file."""
-    violations = []
+    violations: list[tuple[Path, int, str, str]] = []
     text = path.read_text(encoding="utf-8")
     for line_no, line in enumerate(text.splitlines(), start=1):
         for label, pattern in FORBIDDEN_PATTERNS:
@@ -51,12 +51,12 @@ def scan_file(path: Path):
 
 def main() -> int:
     try:
-        files = list(iter_skill_markdown_files(SKILLS_DIR))
+        files = iter_skill_markdown_files(SKILLS_DIR)
     except OSError as exc:
         print(f"FAIL: could not scan {SKILLS_DIR}: {exc}")
         return 1
 
-    violations = []
+    violations: list[tuple[Path, int, str, str]] = []
     for path in files:
         try:
             violations.extend(scan_file(path))

@@ -7,39 +7,118 @@ Checks:
   - YAML parses correctly
   - No unlabelled code fences (maintainability)
 """
-import os
-import sys
-import yaml
-import re
 
-DOCS_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "docs")
+from __future__ import annotations
+
+import os
+import re
+import sys
+from datetime import datetime, date
+from pathlib import Path
+
+import yaml
+
+DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
+
+# Regex to match frontmatter between --- delimiters
+FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---", re.DOTALL)
+# Regex to match code fences with optional language label
+FENCE_RE = re.compile(r"^```(\w*)$")
+
+
+def parse_frontmatter(content: str) -> dict | None:
+    """Parse YAML frontmatter from markdown content. Returns None if missing."""
+    match = FRONTMATTER_RE.search(content)
+    if not match:
+        return None
+    try:
+        fm = yaml.safe_load(match.group(1))
+    except yaml.YAMLError:
+        return None
+    return fm if isinstance(fm, dict) else None
+
+
+def check_expiry(fm: dict, fname: str) -> tuple[list[str], list[str]]:
+    """Check expires field. Returns (errors, warnings)."""
+    errors = []
+    warnings = []
+
+    if "expires" not in fm:
+        warnings.append(f"{fname}: no 'expires' field — add one for freshness guidance")
+        return errors, warnings
+
+    expires_val = fm["expires"]
+    expiry: datetime | None = None
+
+    if isinstance(expires_val, date) and not isinstance(expires_val, datetime):
+        expiry = datetime.combine(expires_val, datetime.min.time())
+    elif isinstance(expires_val, str):
+        try:
+            expiry = datetime.strptime(expires_val, "%Y-%m-%d")
+        except ValueError:
+            errors.append(f"{fname}: 'expires' not a valid YYYY-MM-DD date")
+            return errors, warnings
+    elif isinstance(expires_val, datetime):
+        expiry = expires_val
+    else:
+        errors.append(f"{fname}: 'expires' not a date or string")
+        return errors, warnings
+
+    if expiry and expiry < datetime.now():
+        warnings.append(f"{fname}: expired on {fm['expires']}")
+
+    return errors, warnings
+
+
+def check_fences(content: str, fname: str) -> list[str]:
+    """Check for unlabelled code fences. Returns list of warnings."""
+    warnings = []
+    lines = content.split("\n")
+    fences: list[tuple[int, str]] = []  # (line_number, language)
+
+    for i, line in enumerate(lines):
+        match = FENCE_RE.match(line)
+        if match:
+            # Skip frontmatter delimiters (---)
+            if line.startswith("---"):
+                continue
+            lang = match.group(1).strip()
+            fences.append((i + 1, lang))
+
+    # Pair up opening/closing fences
+    for i in range(0, len(fences), 2):
+        if i + 1 >= len(fences):
+            warnings.append(f"{fname}: unmatched code fence at line {fences[i][0]}")
+            break
+        open_line, lang = fences[i]
+        close_line, _ = fences[i + 1]
+        if not lang:
+            warnings.append(f"{fname}: unlabelled code fence at line {open_line} (closes at {close_line})")
+
+    return warnings
 
 
 def main() -> int:
-    errors = []
-    warnings = []
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    if not DOCS_DIR.exists():
+        print(f"FAIL: docs directory not found at {DOCS_DIR}")
+        return 1
 
     for fname in sorted(os.listdir(DOCS_DIR)):
         if not fname.endswith(".md"):
             continue
-        path = os.path.join(DOCS_DIR, fname)
-        with open(path) as f:
-            raw = f.read()
-
-        # Parse frontmatter
-        m = re.match(r"^---\s*\n(.*?)\n---", raw, re.DOTALL)
-        if not m:
-            errors.append(f"{fname}: missing YAML frontmatter")
-            continue
-
+        path = DOCS_DIR / fname
         try:
-            fm = yaml.safe_load(m.group(1))
-        except yaml.YAMLError as e:
-            errors.append(f"{fname}: YAML parse error: {e}")
+            content = path.read_text(encoding="utf-8")
+        except OSError as exc:
+            errors.append(f"{fname}: could not read: {exc}")
             continue
 
-        if not isinstance(fm, dict):
-            errors.append(f"{fname}: frontmatter is not a mapping")
+        fm = parse_frontmatter(content)
+        if fm is None:
+            errors.append(f"{fname}: missing or invalid YAML frontmatter")
             continue
 
         # Required fields
@@ -48,33 +127,12 @@ def main() -> int:
                 errors.append(f"{fname}: missing required field '{field}'")
 
         # Expiry check
-        if "expires" not in fm:
-            warnings.append(f"{fname}: no 'expires' field — add one for freshness guidance")
-        else:
-            from datetime import datetime, date
-            expires_val = fm["expires"]
-            if isinstance(expires_val, date) and not isinstance(expires_val, datetime):
-                expiry = datetime.combine(expires_val, datetime.min.time())
-            elif isinstance(expires_val, str):
-                expiry = datetime.strptime(expires_val, "%Y-%m-%d")
-            elif isinstance(expires_val, datetime):
-                expiry = expires_val
-            else:
-                errors.append(f"{fname}: 'expires' not a date or string")
-                expiry = None
-            if expiry and expiry < datetime.now():
-                warnings.append(f"{fname}: expired on {fm['expires']}")
+        e, w = check_expiry(fm, fname)
+        errors.extend(e)
+        warnings.extend(w)
 
-        # Unlabelled code fences
-        lines = raw.split("\n")
-        fence_ix = [i for i, l in enumerate(lines) if re.match(r"^```", l)]
-        # Skip frontmatter fences (first and second `---`)
-        fence_ix = [i for i in fence_ix if not lines[i].startswith("---")]
-        # Pair up fences; check if first of each pair has a label
-        for i in range(0, len(fence_ix) - 1, 2):
-            opening = lines[fence_ix[i]]
-            if opening.strip() == "```":
-                warnings.append(f"{fname}: unlabelled code fence at line {fence_ix[i]+1}")
+        # Fence check
+        warnings.extend(check_fences(content, fname))
 
         print(f"  PASS  {fname}")
 
@@ -84,7 +142,7 @@ def main() -> int:
             print(f"  WARN  {w}")
 
     if errors:
-        print(f"\n{'='*50}")
+        print(f"\n{'=' * 50}")
         for e in errors:
             print(f"  FAIL  {e}")
         return 1
@@ -94,4 +152,5 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    from pathlib import Path
     sys.exit(main())
