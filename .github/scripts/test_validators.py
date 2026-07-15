@@ -81,9 +81,43 @@ class ContractTests(unittest.TestCase):
     def test_expected_401_is_valid_without_json(self):
         entry = {
             "expected_statuses": [401],
+            "max_redirects": 0,
         }
-        result = verify_urls.CheckResult(401, 0, "HTTP_401")
+        result = verify_urls.CheckResult(401, 0, "HTTP_401", "https://example.com")
         self.assertTrue(verify_urls.result_is_valid(entry, result))
+
+    def test_redirect_limit_detects_canonical_drift(self):
+        entry = {
+            "expected_statuses": [200],
+            "max_redirects": 0,
+        }
+        result = verify_urls.CheckResult(200, 1, "-", "https://example.com/new")
+        self.assertEqual(
+            verify_urls.contract_drift_reasons(entry, result),
+            ["redirects=1"],
+        )
+
+    def test_canonical_url_detects_target_drift(self):
+        entry = {
+            "expected_statuses": [200],
+            "canonical_url": "https://example.com/current",
+        }
+        result = verify_urls.CheckResult(200, 0, "-", "https://example.com/moved")
+        self.assertEqual(
+            verify_urls.contract_drift_reasons(entry, result),
+            ["final_url=https://example.com/moved"],
+        )
+
+    def test_manifest_rejects_negative_redirect_limit(self):
+        entry = {
+            "name": "test",
+            "url": "https://example.com",
+            "expected_statuses": [200],
+            "source_section": "test",
+            "max_redirects": -1,
+        }
+        with self.assertRaisesRegex(ValueError, "non-negative"):
+            verify_urls.validate_entry(entry)
 
 
 if __name__ == "__main__":

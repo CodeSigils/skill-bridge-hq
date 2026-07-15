@@ -2,8 +2,8 @@
 
 ## Supported Versions
 
-This repo is a single-SKILL.md methodology. There are no versioned releases —
-always use the latest commit from `main`.
+This repo ships one skill methodology with supporting reference files. There are
+no versioned releases — always use the latest commit from `main`.
 
 ## Reporting a Vulnerability
 

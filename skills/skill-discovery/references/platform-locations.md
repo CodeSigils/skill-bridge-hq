@@ -18,9 +18,9 @@ particular filesystem path.
 
 Sources to verify:
 
-- Codex: <https://developers.openai.com/codex/skills>
+- Codex: <https://learn.chatgpt.com/docs/build-skills>
 - Claude Code: <https://code.claude.com/docs/en/skills>
-- Cursor: <https://cursor.com/docs/context/skills>
+- Cursor: <https://cursor.com/docs/skills>
 - OpenCode: <https://opencode.ai/docs/skills>
 - Gemini CLI: <https://geminicli.com/docs/cli/using-agent-skills/>
 - GitHub Copilot: <https://docs.github.com/en/copilot/concepts/agents/about-agent-skills>
