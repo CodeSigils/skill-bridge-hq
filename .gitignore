@@ -7,8 +7,10 @@ venv/
 env/
 ENV/
 .vscode/
+.idea/
 .DS_Store
 node_modules/
+Thumbs.db
 *.swp
 *.swo
 tmp/
