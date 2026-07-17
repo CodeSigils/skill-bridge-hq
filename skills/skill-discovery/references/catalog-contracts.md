@@ -29,13 +29,13 @@ GitHub code search requires authentication. Prefer the dedicated `gh search`
 subcommand which supports structured qualifiers:
 
 ```bash
-gh search code -- '<query>' filename:SKILL.md path:skills/ --limit 10 --sort indexed
+gh search code '<query>' filename:SKILL.md path:skills/ --limit 10
 ```
 
-`--sort indexed` returns most recently indexed results first, biasing toward
-actively maintained repositories over abandoned ones. If the authenticated CLI
-is available, this is the preferred path — one call, filtered to actual skill
-directories, no dedup needed on the client side.
+The `path:skills/` qualifier filters out SKILL.md files used as project
+documentation (not agent skills). If the authenticated CLI is available, this is
+the preferred path — one call, scoped results, no dedup needed on the client
+side.
 
 When `gh` is installed but not authenticated, try a curl-based web search that
 needs no token. GitHub serves a browsable HTML page for code search queries:
