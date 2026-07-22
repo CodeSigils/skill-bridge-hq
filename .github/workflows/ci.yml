@@ -9,7 +9,8 @@ on:
     - cron: '0 6 * * 1'
   push:
     branches: [main]
-    paths:
+    paths: &ci_paths
+      - '.gitignore'
       - 'README.md'
       - 'SECURITY.md'
       - '.agents/skills/skill-discovery'
@@ -19,31 +20,26 @@ on:
       - '.github/scripts/**'
   pull_request:
     branches: [main]
-    paths:
-      - 'README.md'
-      - 'SECURITY.md'
-      - '.agents/skills/skill-discovery'
-      - 'skills/**'
-      - 'docs/**'
-      - '.github/workflows/ci.yml'
-      - '.github/scripts/**'
+    paths: *ci_paths
 
 jobs:
   validate:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
+    env:
+      VENV_PYTHON: .venv/bin/python
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       - name: Install validation dependency
         run: |
           python3 -m venv .venv
-          .venv/bin/python -m pip install PyYAML==6.0.3
+          $VENV_PYTHON -m pip install PyYAML==6.0.3
       - name: Run validator unit tests
-        run: .venv/bin/python .github/scripts/test_validators.py
+        run: $VENV_PYTHON .github/scripts/test_validators.py
       - name: Check portable payload references
-        run: .venv/bin/python .github/scripts/ci-check.py
+        run: $VENV_PYTHON .github/scripts/ci-check.py
       - name: Validate documentation and skill payload
-        run: .venv/bin/python .github/scripts/validate-docs.py
+        run: $VENV_PYTHON .github/scripts/validate-docs.py
 
   monitor-external-contracts:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
