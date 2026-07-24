@@ -52,39 +52,19 @@ The workflow guides the agent to:
 
 ## How it works
 
-The skill runs a read-only workflow: given a task description, it finds
-candidate skills, inspects them thoroughly, and returns a structured
-recommendation — without installing or creating anything unless you say so.
+The workflow is **read-only by default** — no skill is installed or created
+unless you explicitly ask.
 
 **Input:** a task description and any constraints (language, framework, offline
 requirement, zero-dependency, etc.).
-
-**Workflow:**
-
-1. **Define the need** — extract the concrete task, required tools, and
-   constraints. Generate search terms and aliases.
-2. **Search locally** — scan installed skills across all client-specific and
-   user-level directories before touching anything remote.
-3. **Check freshness** — verify catalog timestamps and versions; flag stale
-   sources instead of assuming no skill exists.
-4. **Search externally** — expand through documented catalog interfaces,
-   marketplace APIs, authenticated source search, and web fallbacks.
-5. **Inspect candidates** — read each serious candidate's full payload:
-   `SKILL.md`, scripts, assets, dependencies, provenance, license, and
-   maintenance activity.
-6. **Evaluate fit** — classify each candidate as direct fit, conditional fit,
-   partial fit, or rejected, with evidence for each decision.
-7. **Report** — return a structured recommendation covering the need, sources
-   searched, trust review, compatibility, tradeoffs, and alternatives.
 
 **Output:** a structured report with ranked candidates, task-specific evidence,
 trust assessment (provenance, dependencies, permissions, audits), known gaps,
 and next steps.
 
-The workflow verifies volatile external contracts (catalog endpoints, install
-commands, marketplace URLs) at use time rather than caching them. Dated
-research lives in `docs/` and is never copied into recommendations without
-re-verification.
+Volatile external contracts (catalog endpoints, install commands, marketplace
+URLs) are verified at use time rather than cached. Dated research lives in
+`docs/` and is never copied into recommendations without re-verification.
 
 ## Quick start
 
