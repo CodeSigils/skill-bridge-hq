@@ -331,19 +331,25 @@ check-yaml, check-added-large-files.
 README: add setup instruction (`pip install pre-commit && pre-commit
 install`).
 
-### P5 — Automated marketplace scanning via external APIs (discussion)
+### P5 — Skill registry API research with manual fallback (discussion)
 
-Multiple agent-skill catalog websites now expose public APIs. These could
-replace or augment manual marketplace research with periodic automated scans.
+Use skill registry APIs as the primary research source for marketplace
+scanning. Manual research is the fallback when APIs aren't available or
+sufficient.
 
-**Best candidates (no auth required):**
+**Primary: Registry APIs (no auth required)**
   - OpenAgentSkill (openagentskill.com) — trust scores, audits, task→skill
     resolution, quality scores. Most comprehensive read-only API.
   - SkillsHub (skillshub.wtf) — 10k+ skills, natural language resolver
     via `/api/v1/skills/resolve?task=...`.
   - Mercury Skills (skills.mercuryagent.sh) — clean JSON, simple metadata.
 
-**Needs auth or blocked:**
+**Fallback: Manual research**
+  - Use when APIs are down, change, or don't cover a skill category
+  - Use when API data conflicts with our own assessment
+  - Use for skills not yet indexed by registries
+
+**Needs auth or blocked (skip for now):**
   - skills.sh — Vercel OIDC API key required.
   - CrossAITools — Cloudflare blocks automated access.
 
@@ -353,7 +359,8 @@ replace or augment manual marketplace research with periodic automated scans.
   - Refresh `docs/hub-marketplace-research.md` with live data
 
 **Tradeoffs:**
-  + Pro: automated, no manual research, catches new skills faster
+  + Pro: automated, catches new skills faster than manual
+  + Pro: registry trust scores augment our own assessment
   - Con: external API dependency (what if they go down or change)
   - Con: their trust/audit data may conflict with our own assessment
   - Con: scope creep — monitoring URLs + APIs grows maintenance burden
