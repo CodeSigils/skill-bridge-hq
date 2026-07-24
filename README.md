@@ -10,6 +10,13 @@ It searches local installations and external catalogs, checks candidate safety
 and compatibility, and reports what it found without installing or creating
 anything unless the user explicitly asks.
 
+**Input:** a task description and any constraints (language, framework, offline
+requirement, zero-dependency, etc.). **Output:** a structured report with ranked
+candidates, task-specific evidence, trust assessment (provenance, dependencies,
+permissions, audits), known gaps, and next steps. Volatile external contracts
+(catalog endpoints, install commands, marketplace URLs) are verified at use
+time rather than cached.
+
 This repository contains a methodology, not a static skill collection. Catalog
 sizes, client support, endpoints, and install commands change frequently, so the
 shipped workflow verifies volatile contracts at use time and keeps dated research
@@ -49,22 +56,6 @@ The workflow guides the agent to:
 7. **Report** — return a ranked table with evidence per candidate, trust
    assessment, known gaps, and next steps. No skill is installed or created
    unless you explicitly ask.
-
-## How it works
-
-The workflow is **read-only by default** — no skill is installed or created
-unless you explicitly ask.
-
-**Input:** a task description and any constraints (language, framework, offline
-requirement, zero-dependency, etc.).
-
-**Output:** a structured report with ranked candidates, task-specific evidence,
-trust assessment (provenance, dependencies, permissions, audits), known gaps,
-and next steps.
-
-Volatile external contracts (catalog endpoints, install commands, marketplace
-URLs) are verified at use time rather than cached. Dated research lives in
-`docs/` and is never copied into recommendations without re-verification.
 
 ## Quick start
 
@@ -129,10 +120,10 @@ skills/skill-discovery/
 
 What users receive:
 
-- A single `SKILL.md` with the complete discovery workflow inlined;
+- A single `SKILL.md` with the complete discovery workflow;
 - five reference files loaded only when the relevant stage is reached;
 - no runtime scripts, configuration files, dependencies, or test fixtures;
-- no agent-specific commands or paths in any shipped file.
+- no agent-specific configuration or hardcoded paths in any shipped file.
 
 Copy `skills/skill-discovery/` into your client's skill directory, as
 described in Quick Start above.
@@ -169,13 +160,19 @@ Two scripts directories serve different purposes:
 
 ## Evidence and validation
 
+### Dated research
+
 [`docs/hub-marketplace-research.md`](docs/hub-marketplace-research.md) is a
 dated historical snapshot, not current product documentation. Its measurements
 must not be copied into recommendations without re-verification.
 
-CI performs deterministic payload and documentation checks on pushes and pull
-requests. External URL monitoring runs on a schedule or manually so transient
-third-party outages do not make ordinary documentation changes flaky.
+### CI pipeline
+
+CI performs payload and documentation checks on pushes and pull requests.
+External URL monitoring runs on a schedule or manually so transient third-party
+outages do not make ordinary documentation changes flaky.
+
+### Catalog status
 
 The repository is directly installable by compatible GitHub skill installers,
 but it is not yet indexed by skills.sh or the Hermes hub. "Installable" and
