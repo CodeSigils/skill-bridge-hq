@@ -22,6 +22,7 @@ def load_script(name: str):
 
 validate_docs = load_script("validate-docs")
 verify_urls = load_script("verify-marketplace-urls")
+ci_check = load_script("ci-check")
 
 
 class DocumentationTests(unittest.TestCase):
@@ -51,6 +52,94 @@ class DocumentationTests(unittest.TestCase):
     def test_unlabelled_fence_is_rejected(self):
         errors = validate_docs.check_fences("```\nexample\n```", "example.md")
         self.assertTrue(any("has no language" in error for error in errors))
+
+
+class PortabilityTests(unittest.TestCase):
+    """Tests for the ci-check.py portability gate."""
+
+    def test_clean_file_passes(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+            f.write("# My Skill\n\nThis is a portable skill with no platform refs.\n")
+            f.flush()
+            violations = ci_check.scan_file(Path(f.name))
+        self.assertEqual(violations, [])
+
+    def test_hermes_tool_name_caught(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+            f.write("Use skill_view to inspect the result.\n")
+            f.flush()
+            violations = ci_check.scan_file(Path(f.name))
+        self.assertTrue(any("Hermes tool name" in v[2] for v in violations))
+
+    def test_hermes_config_path_caught(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+            f.write("Config lives at ~/.hermes/config.yaml\n")
+            f.flush()
+            violations = ci_check.scan_file(Path(f.name))
+        self.assertTrue(any("Hermes config path" in v[2] for v in violations))
+
+    def test_hermes_cli_command_caught(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+            f.write("Run `hermes skills install foo` to add it.\n")
+            f.flush()
+            violations = ci_check.scan_file(Path(f.name))
+        self.assertTrue(any("Hermes CLI command" in v[2] for v in violations))
+
+    def test_case_insensitive_match(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False) as f:
+            f.write("The Skill_View tool is handy.\n")
+            f.flush()
+            violations = ci_check.scan_file(Path(f.name))
+        self.assertTrue(any("Hermes tool name" in v[2] for v in violations))
+
+    def test_empty_directory_passes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            files = ci_check.iter_skill_markdown_files(root)
+            self.assertEqual(files, [])
+
+
+class ContractDriftTests(unittest.TestCase):
+    """Tests for verify-marketplace-urls.py contract drift detection."""
+
+    def test_status_mismatch_detected(self):
+        entry = {"expected_statuses": [200], "max_redirects": 5}
+        result = verify_urls.CheckResult(404, 0, "-", "https://example.com")
+        reasons = verify_urls.contract_drift_reasons(entry, result)
+        self.assertIn("status=404", reasons)
+
+    def test_json_schema_failure_detected(self):
+        entry = {
+            "expected_statuses": [200],
+            "content_type": "json",
+            "json_schema": {"type": "object", "required_keys": ["count"]},
+        }
+        result = verify_urls.CheckResult(200, 0, "SCHEMA:missing-count", "https://example.com")
+        reasons = verify_urls.contract_drift_reasons(entry, result)
+        self.assertIn("SCHEMA:missing-count", reasons)
+
+    def test_all_matching_entry_is_valid(self):
+        entry = {
+            "expected_statuses": [200, 301],
+            "max_redirects": 2,
+            "canonical_url": "https://example.com/current",
+        }
+        result = verify_urls.CheckResult(200, 1, "-", "https://example.com/current")
+        self.assertTrue(verify_urls.result_is_valid(entry, result))
+        self.assertEqual(verify_urls.contract_drift_reasons(entry, result), [])
+
+    def test_multiple_drift_reasons(self):
+        entry = {
+            "expected_statuses": [200],
+            "max_redirects": 0,
+            "canonical_url": "https://example.com/original",
+        }
+        result = verify_urls.CheckResult(500, 3, "-", "https://example.com/other")
+        reasons = verify_urls.contract_drift_reasons(entry, result)
+        self.assertEqual(len(reasons), 3)
+        self.assertTrue(any("status=500" in r for r in reasons))
+        self.assertTrue(any("redirects=3" in r for r in reasons))
+        self.assertTrue(any("final_url=" in r for r in reasons))
 
 
 class ContractTests(unittest.TestCase):

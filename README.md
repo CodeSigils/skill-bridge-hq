@@ -80,6 +80,16 @@ skill-discovery/
 The canonical payload is `skills/skill-discovery/`. The `.agents` entry is only
 a zero-copy discovery adapter; changes belong in the canonical directory.
 
+Two scripts directories serve different purposes:
+
+- **`scripts/`** — standalone maintainer tools runnable outside CI. Anyone can
+  clone the repo and run `python3 scripts/validate-skill.py <skill-dir>` to
+  validate an arbitrary skill directory. These tools auto-detect their repo
+  root and have no CI-specific coupling.
+- **`.github/scripts/`** — CI-internal validators and test suites. These are
+  tightly coupled to this repository's structure (hardcoded paths, manifest
+  loaders, test helpers) and run only in the CI pipeline.
+
 ## How it works
 
 The skill runs a read-only workflow: given a task description, it finds
