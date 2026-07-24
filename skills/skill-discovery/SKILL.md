@@ -160,6 +160,8 @@ creator when available rather than inventing platform-specific metadata.
   catalog/API usage and authenticated fallbacks.
 - [`references/trust-review.md`](references/trust-review.md): full third-party
   inspection and safety checklist.
+- [`references/skill-format.md`](references/skill-format.md): frontmatter spec,
+  description quality criteria, folder purposes, and client extensions.
 - [`references/examples.md`](references/examples.md): portable local-search and
   recommendation examples.
 

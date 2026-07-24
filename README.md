@@ -67,12 +67,13 @@ skill-discovery/
 ├── README.md
 ├── SECURITY.md
 ├── docs/                              # dated research and evidence manifest
+├── scripts/                           # standalone validators (validate-skill.py)
 ├── skills/skill-discovery/
 │   ├── SKILL.md                       # focused discovery workflow
 │   └── references/                    # loaded only when relevant
 ├── .agents/skills/skill-discovery     # symlink to the canonical skill
 └── .github/
-    ├── scripts/                       # deterministic and network validators
+    ├── scripts/                       # CI-only validators and test suite
     └── workflows/ci.yml
 ```
 

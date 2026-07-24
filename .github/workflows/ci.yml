@@ -18,6 +18,7 @@ on:
       - 'docs/**'
       - '.github/workflows/ci.yml'
       - '.github/scripts/**'
+      - 'scripts/**'
   pull_request:
     branches: [main]
     paths: *ci_paths
@@ -36,6 +37,8 @@ jobs:
           $VENV_PYTHON -m pip install PyYAML==6.0.3
       - name: Run validator unit tests
         run: $VENV_PYTHON .github/scripts/test_validators.py
+      - name: Run validate-skill tests
+        run: $VENV_PYTHON scripts/test_validate_skill.py
       - name: Check portable payload references
         run: $VENV_PYTHON .github/scripts/ci-check.py
       - name: Validate documentation and skill payload

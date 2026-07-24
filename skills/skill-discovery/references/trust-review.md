@@ -18,6 +18,15 @@ Complete this review before recommending installation or execution.
 - Flag missing files, remote content fetched at runtime, encoded content, dynamic
   downloads, or instructions that obscure what will execute.
 
+### Documentation-derived skills
+
+When a candidate skill wraps external documentation, also check:
+
+- Are summaries in the author's words or verbatim copies?
+- Is the doc version stated and current?
+- Are actionable patterns extracted or is it a docs mirror?
+- Are gotchas and edge cases covered?
+
 ## Capabilities and behavior
 
 - Enumerate commands, tools, package managers, interpreters, and services used.
@@ -41,6 +50,16 @@ Complete this review before recommending installation or execution.
 - Treat audit badges, popularity, stars, and install counts as supporting signals,
   never as proof of safety or quality.
 - Compare marketplace metadata with the canonical files and revision.
+
+### Skill freshness
+
+When a skill declares a product version or `release_date`:
+
+- Check the source repo's last commit date.
+- Compare declared product version against current docs.
+- Treat skills with no version metadata as potentially stale.
+- Flag if `release_date` is older than six months and the product has had major
+  releases since.
 
 ## Decision
 
