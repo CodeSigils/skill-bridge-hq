@@ -15,6 +15,77 @@ sizes, client support, endpoints, and install commands change frequently, so the
 shipped workflow verifies volatile contracts at use time and keeps dated research
 outside the core instructions.
 
+## What it does in practice
+
+Suppose you ask your agent:
+
+> Find a skill for managing Docker Compose dev environments. It must work
+> offline and have no Python dependency.
+
+The workflow guides the agent to:
+
+1. **Define the need** — extract concrete requirements (Docker Compose,
+   offline-capable, zero Python dependency) and generate search terms
+   (`docker`, `compose`, `containers`, `dev-environments`).
+2. **Search locally** — scan installed skills across all client directories
+   (`.agents/skills/`, `.claude/skills/`, `.opencode/skills/`, etc.) before
+   touching anything remote. If a local match covers the need, report it
+   immediately.
+3. **Check freshness** — verify that catalog timestamps and version markers are
+   current. A skill indexed six months ago with no release update is flagged,
+   not silently trusted.
+4. **Search externally** — query agentskills.io, GitHub topic search, and
+   marketplace APIs. Each source is tried with documented fallbacks; no single
+   outage blocks the workflow.
+5. **Inspect candidates** — for each serious match, read the full payload:
+   `SKILL.md`, any scripts or templates, dependency declarations, license,
+   provenance, and maintenance activity.
+6. **Evaluate fit** — classify each candidate:
+   - **Direct fit** — meets all stated constraints.
+   - **Conditional fit** — works if a minor modification is made (e.g., wrap
+     the Python dependency in a container).
+   - **Partial fit** — covers part of the need; supplementary skill required.
+   - **Rejected** — fails a hard constraint (e.g., requires Python at runtime).
+7. **Report** — return a ranked table with evidence per candidate, trust
+   assessment, known gaps, and next steps. No skill is installed or created
+   unless you explicitly ask.
+
+## How it works
+
+The skill runs a read-only workflow: given a task description, it finds
+candidate skills, inspects them thoroughly, and returns a structured
+recommendation — without installing or creating anything unless you say so.
+
+**Input:** a task description and any constraints (language, framework, offline
+requirement, zero-dependency, etc.).
+
+**Workflow:**
+
+1. **Define the need** — extract the concrete task, required tools, and
+   constraints. Generate search terms and aliases.
+2. **Search locally** — scan installed skills across all client-specific and
+   user-level directories before touching anything remote.
+3. **Check freshness** — verify catalog timestamps and versions; flag stale
+   sources instead of assuming no skill exists.
+4. **Search externally** — expand through documented catalog interfaces,
+   marketplace APIs, authenticated source search, and web fallbacks.
+5. **Inspect candidates** — read each serious candidate's full payload:
+   `SKILL.md`, scripts, assets, dependencies, provenance, license, and
+   maintenance activity.
+6. **Evaluate fit** — classify each candidate as direct fit, conditional fit,
+   partial fit, or rejected, with evidence for each decision.
+7. **Report** — return a structured recommendation covering the need, sources
+   searched, trust review, compatibility, tradeoffs, and alternatives.
+
+**Output:** a structured report with ranked candidates, task-specific evidence,
+trust assessment (provenance, dependencies, permissions, audits), known gaps,
+and next steps.
+
+The workflow verifies volatile external contracts (catalog endpoints, install
+commands, marketplace URLs) at use time rather than caching them. Dated
+research lives in `docs/` and is never copied into recommendations without
+re-verification.
+
 ## Quick start
 
 Clone the repository:
@@ -60,6 +131,32 @@ command is advertised. Clone plus `external_dirs` is the verified Hermes path
 until registration. Review the skill before enabling it; catalog registration is
 a later distribution step, not a prerequisite for local use.
 
+## Skill payload — what ships to the user
+
+Only the `skills/skill-discovery/` directory is the runtime payload. Everything
+else is repository-only development infrastructure.
+
+```text
+skills/skill-discovery/
+├── SKILL.md                        # the 7-stage discovery workflow
+└── references/                     # loaded on demand, not upfront
+    ├── catalog-contracts.md        # catalog interfaces and known shapes
+    ├── examples.md                 # example outputs for calibration
+    ├── platform-locations.md       # per-client skill directories
+    ├── skill-format.md             # frontmatter spec, description quality
+    └── trust-review.md             # safety and trust evaluation checklist
+```
+
+What users receive:
+
+- A single `SKILL.md` with the complete discovery workflow inlined;
+- five reference files loaded only when the relevant stage is reached;
+- no runtime scripts, configuration files, dependencies, or test fixtures;
+- no agent-specific commands or paths in any shipped file.
+
+Copy `skills/skill-discovery/` into your client's skill directory, as
+described in Quick Start above.
+
 ## Repository layout
 
 ```text
@@ -90,103 +187,6 @@ Two scripts directories serve different purposes:
   tightly coupled to this repository's structure (hardcoded paths, manifest
   loaders, test helpers) and run only in the CI pipeline.
 
-## How it works
-
-The skill runs a read-only workflow: given a task description, it finds
-candidate skills, inspects them thoroughly, and returns a structured
-recommendation — without installing or creating anything unless you say so.
-
-**Input:** a task description and any constraints (language, framework, offline
-requirement, zero-dependency, etc.).
-
-**Workflow:**
-
-1. **Define the need** — extract the concrete task, required tools, and
-   constraints. Generate search terms and aliases.
-2. **Search locally** — scan installed skills across all client-specific and
-   user-level directories before touching anything remote.
-3. **Check freshness** — verify catalog timestamps and versions; flag stale
-   sources instead of assuming no skill exists.
-4. **Search externally** — expand through documented catalog interfaces,
-   marketplace APIs, authenticated source search, and web fallbacks.
-5. **Inspect candidates** — read each serious candidate's full payload:
-   `SKILL.md`, scripts, assets, dependencies, provenance, license, and
-   maintenance activity.
-6. **Evaluate fit** — classify each candidate as direct fit, conditional fit,
-   partial fit, or rejected, with evidence for each decision.
-7. **Report** — return a structured recommendation covering the need, sources
-   searched, trust review, compatibility, tradeoffs, and alternatives.
-
-**Output:** a structured report with ranked candidates, task-specific evidence,
-trust assessment (provenance, dependencies, permissions, audits), known gaps,
-and next steps.
-
-The workflow verifies volatile external contracts (catalog endpoints, install
-commands, marketplace URLs) at use time rather than caching them. Dated
-research lives in `docs/` and is never copied into recommendations without
-re-verification.
-
-## What it does in practice
-
-Suppose you ask your agent:
-
-> Find a skill for managing Docker Compose dev environments. It must work
-> offline and have no Python dependency.
-
-The workflow guides the agent to:
-
-1. **Define the need** — extract concrete requirements (Docker Compose,
-   offline-capable, zero Python dependency) and generate search terms
-   (`docker`, `compose`, `containers`, `dev-environments`).
-2. **Search locally** — scan installed skills across all client directories
-   (`.agents/skills/`, `.claude/skills/`, `.opencode/skills/`, etc.) before
-   touching anything remote. If a local match covers the need, report it
-   immediately.
-3. **Check freshness** — verify that catalog timestamps and version markers are
-   current. A skill indexed six months ago with no release update is flagged,
-   not silently trusted.
-4. **Search externally** — query agentskills.io, GitHub topic search, and
-   marketplace APIs. Each source is tried with documented fallbacks; no single
-   outage blocks the workflow.
-5. **Inspect candidates** — for each serious match, read the full payload:
-   `SKILL.md`, any scripts or templates, dependency declarations, license,
-   provenance, and maintenance activity.
-6. **Evaluate fit** — classify each candidate:
-   - **Direct fit** — meets all stated constraints.
-   - **Conditional fit** — works if a minor modification is made (e.g., wrap
-     the Python dependency in a container).
-   - **Partial fit** — covers part of the need; supplementary skill required.
-   - **Rejected** — fails a hard constraint (e.g., requires Python at runtime).
-7. **Report** — return a ranked table with evidence per candidate, trust
-   assessment, known gaps, and next steps. No skill is installed or created
-   unless you explicitly ask.
-
-## Skill payload — what ships to the user
-
-Only the `skills/skill-discovery/` directory is the runtime payload. Everything
-else is repository-only development infrastructure.
-
-```text
-skills/skill-discovery/
-├── SKILL.md                        # the 7-stage discovery workflow
-└── references/                     # loaded on demand, not upfront
-    ├── catalog-contracts.md        # catalog interfaces and known shapes
-    ├── examples.md                 # example outputs for calibration
-    ├── platform-locations.md       # per-client skill directories
-    ├── skill-format.md             # frontmatter spec, description quality
-    └── trust-review.md             # safety and trust evaluation checklist
-```
-
-What users receive:
-
-- A single `SKILL.md` with the complete discovery workflow inlined;
-- five reference files loaded only when the relevant stage is reached;
-- no runtime scripts, configuration files, dependencies, or test fixtures;
-- no agent-specific commands or paths in any shipped file.
-
-Copy `skills/skill-discovery/` into your client's skill directory, as
-described in Quick Start above.
-
 ## Evidence and validation
 
 [`docs/hub-marketplace-research.md`](docs/hub-marketplace-research.md) is a
@@ -198,8 +198,8 @@ requests. External URL monitoring runs on a schedule or manually so transient
 third-party outages do not make ordinary documentation changes flaky.
 
 The repository is directly installable by compatible GitHub skill installers,
-but it is not yet indexed by skills.sh or the Hermes hub. “Installable” and
-“discoverable in a catalog” are intentionally reported as separate states.
+but it is not yet indexed by skills.sh or the Hermes hub. "Installable" and
+"discoverable in a catalog" are intentionally reported as separate states.
 
 ## Security
 
