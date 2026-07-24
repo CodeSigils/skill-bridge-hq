@@ -1,20 +1,50 @@
+# Python bytecode and caches
 __pycache__/
 *.py[codz]
 *$py.class
+.pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.pyright/
+.pytype/
+.pyre/
+
+# Test and coverage artifacts
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+*.eggs/
+
+# Python tool environments
+.tox/
+.nox/
+
+# Virtual environments
 .venv/
 venv/
 env/
 ENV/
-.vscode/
-.idea/
+
+# Local environment and secrets (keep shareable templates)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local editor/OS files
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
-node_modules/
-.cache/
-*.log
+.vscode/
+.idea/
 Thumbs.db
 [Dd]esktop.ini
 *.swp
@@ -22,12 +52,11 @@ Thumbs.db
 *~
 tmp/
 .tmp/
+.cache/
+*.log
 
-# Local environment and secret files (keep shareable templates)
-.env
-.env.*
-!.env.example
-!.env.*.example
+# JavaScript (if used for tooling)
+node_modules/
 
 # Agent runtime data (user-local, not repo config)
 .hermes/
@@ -43,6 +72,5 @@ tmp/
 plan/
 proposals/
 
-# open-mem: Auto-generated folder context files.
-# Uncomment to exclude from version control (recommended for large projects):
+# open-mem: Auto-generated folder context files
 **/AGENTS.md
