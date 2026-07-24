@@ -116,6 +116,67 @@ commands, marketplace URLs) at use time rather than caching them. Dated
 research lives in `docs/` and is never copied into recommendations without
 re-verification.
 
+## What it does in practice
+
+Suppose you ask your agent:
+
+> Find a skill for managing Docker Compose dev environments. It must work
+> offline and have no Python dependency.
+
+The workflow guides the agent to:
+
+1. **Define the need** — extract concrete requirements (Docker Compose,
+   offline-capable, zero Python dependency) and generate search terms
+   (`docker`, `compose`, `containers`, `dev-environments`).
+2. **Search locally** — scan installed skills across all client directories
+   (`.agents/skills/`, `.claude/skills/`, `.opencode/skills/`, etc.) before
+   touching anything remote. If a local match covers the need, report it
+   immediately.
+3. **Check freshness** — verify that catalog timestamps and version markers are
+   current. A skill indexed six months ago with no release update is flagged,
+   not silently trusted.
+4. **Search externally** — query agentskills.io, GitHub topic search, and
+   marketplace APIs. Each source is tried with documented fallbacks; no single
+   outage blocks the workflow.
+5. **Inspect candidates** — for each serious match, read the full payload:
+   `SKILL.md`, any scripts or templates, dependency declarations, license,
+   provenance, and maintenance activity.
+6. **Evaluate fit** — classify each candidate:
+   - **Direct fit** — meets all stated constraints.
+   - **Conditional fit** — works if a minor modification is made (e.g., wrap
+     the Python dependency in a container).
+   - **Partial fit** — covers part of the need; supplementary skill required.
+   - **Rejected** — fails a hard constraint (e.g., requires Python at runtime).
+7. **Report** — return a ranked table with evidence per candidate, trust
+   assessment, known gaps, and next steps. No skill is installed or created
+   unless you explicitly ask.
+
+## Skill payload — what ships to the user
+
+Only the `skills/skill-discovery/` directory is the runtime payload. Everything
+else is repository-only development infrastructure.
+
+```text
+skills/skill-discovery/
+├── SKILL.md                        # the 7-stage discovery workflow
+└── references/                     # loaded on demand, not upfront
+    ├── catalog-contracts.md        # catalog interfaces and known shapes
+    ├── examples.md                 # example outputs for calibration
+    ├── platform-locations.md       # per-client skill directories
+    ├── skill-format.md             # frontmatter spec, description quality
+    └── trust-review.md             # safety and trust evaluation checklist
+```
+
+What users receive:
+
+- A single `SKILL.md` with the complete discovery workflow inlined;
+- five reference files loaded only when the relevant stage is reached;
+- no runtime scripts, configuration files, dependencies, or test fixtures;
+- no agent-specific commands or paths in any shipped file.
+
+Copy `skills/skill-discovery/` into your client's skill directory, as
+described in Quick Start above.
+
 ## Evidence and validation
 
 [`docs/hub-marketplace-research.md`](docs/hub-marketplace-research.md) is a
